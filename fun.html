@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ba Ba Dum — SJKC NAN HWA Year 4 Arcade (Max Visual Edition)</title>
+
+<!-- High-Clarity Rounded Fonts for Severe Myopia -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Nunito:wght@800;900;1000&display=swap" rel="stylesheet">
+
+<!-- PDF Engine -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+  :root {
+    --neon-yellow: #FFE600;
+    --neon-orange: #FF5A00;
+    --neon-pink: #FF007F;
+    --neon-purple: #7928CA;
+    --neon-cyan: #00F0FF;
+    --neon-lime: #00E676;
+    --ink-black: #0F172A;
+    --stroke-chunky: 5px solid #0F172A;
+    --stroke-mega: 7px solid #0F172A;
+    --shadow-chunky: 0 8px 0 #0F172A;
+    --shadow-deep: 0 12px 0 #0F172A;
+    --shadow-pressed: 0 2px 0 #0F172A;
+    --app-font: 'Nunito', 'Comfortaa', system-ui, sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--app-font);
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  html, body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #4F46E5;
+  }
+
+  /* EDGE-TO-EDGE FULL BLEED VIEWPORT */
+  .arcade-viewport {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(circle at 50% 10%, #FF007F 0%, #4338CA 70%, #1E1B4B 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* SLIMLINE HEADER TO MAXIMIZE VISUAL SPACE */
+  .top-strip {
+    width: 100%;
+    height: 60px;
+    padding: 8px 20px;
+    background: #FFFFFF;
+    border-bottom: var(--stroke-chunky);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 100;
+    flex-shrink: 0;
+  }
+
+  .school-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+    font-weight: 1000;
+    color: var(--ink-black);
+  }
+
+  .school-badge span {
+    background: var(--neon-yellow);
+    border: 3px solid var(--ink-black);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    box-shadow: 2px 2px 0 var(--ink-black);
+  }
+
+  .strip-buttons {
+    display: flex;
+    gap: 10px;
+  }
+
+  .tactile-btn-sm {
+    background: var(--neon-yellow);
+    border: 3px solid var(--ink-black);
+    box-shadow: 0 4px 0 var(--ink-black);
+    padding: 6px 16px;
+    border-radius: 16px;
+    font-size: 0.95rem;
+    font-weight: 1000;
+    color: var(--ink-black);
+    cursor: pointer;
+    transition: all 0.08s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tactile-btn-sm:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--ink-black);
+  }
+
+  /* SCREENS CONTAINER */
+  .screen-pane {
+    flex: 1;
+    width: 100%;
+    height: calc(100vh - 60px);
+    display: none;
+    flex-direction: column;
+    padding: 14px 20px;
+    overflow: hidden;
+    position: relative;
+  }
+  .screen-pane.active { display: flex; }
+
+  /* PRELOADER */
+  #panePreload {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 20px;
+  }
+  .spinner-tactile {
+    width: 80px;
+    height: 80px;
+    border: 10px solid #FED7AA;
+    border-top: 10px solid var(--neon-orange);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+
+  /* START / HERO */
+  .hero-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .hero-title {
+    font-size: 4rem;
+    font-weight: 1000;
+    color: var(--neon-yellow);
+    text-shadow: 4px 4px 0 #000, 8px 8px 0 var(--neon-pink);
+    letter-spacing: 1px;
+    text-align: center;
+    line-height: 1.05;
+  }
+
+  .hero-tag {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #FFFFFF;
+    background: rgba(15, 23, 42, 0.75);
+    padding: 6px 24px;
+    border-radius: 30px;
+    border: 3px solid var(--neon-yellow);
+  }
+
+  .aspect-select-row {
+    display: flex;
+    gap: 16px;
+  }
+
+  .aspect-card {
+    background: #FFFFFF;
+    border: var(--stroke-chunky);
+    box-shadow: var(--shadow-chunky);
+    padding: 16px 28px;
+    border-radius: 22px;
+    font-size: 1.25rem;
+    font-weight: 1000;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.1s ease;
+  }
+  .aspect-card.selected {
+    background: var(--neon-yellow);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-deep);
+  }
+
+  .btn-giant-start {
+    background: linear-gradient(135deg, var(--neon-yellow) 0%, var(--neon-orange) 100%);
+    color: var(--ink-black);
+    border: var(--stroke-chunky);
+    box-shadow: var(--shadow-deep);
+    padding: 20px 60px;
+    border-radius: 36px;
+    font-size: 2.3rem;
+    font-weight: 1000;
+    cursor: pointer;
+    transition: all 0.08s ease;
+  }
+  .btn-giant-start:active {
+    transform: translateY(8px);
+    box-shadow: var(--shadow-pressed);
+  }
+
+  /* HUD & PROGRESS */
+  .hud-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+  }
+
+  .hud-badge {
+    background: #FFFFFF;
+    border: 3px solid var(--ink-black);
+    box-shadow: 0 4px 0 var(--ink-black);
+    padding: 6px 18px;
+    border-radius: 18px;
+    font-size: 1.25rem;
+    font-weight: 1000;
+    color: var(--ink-black);
+  }
+
+  .hud-mode {
+    background: var(--neon-yellow);
+    border: 3px solid var(--ink-black);
+    box-shadow: 0 4px 0 var(--ink-black);
+    padding: 6px 22px;
+    border-radius: 18px;
+    font-size: 1.2rem;
+    font-weight: 1000;
+    color: var(--ink-black);
+    text-transform: uppercase;
+  }
+
+  .progress-edge-track {
+    width: 100%;
+    height: 14px;
+    background: #FFFFFF;
+    border: 3px solid var(--ink-black);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+  .progress-edge-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--neon-yellow), var(--neon-lime));
+    transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* =========================================================================
+     MAXIMUM DIMENSION GAME STAGES
+     ========================================================================= */
+  .stage-fill {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    gap: 10px;
+  }
+
+  /* COMPACT PROMPT STRIP */
+  .prompt-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-shrink: 0;
+    padding: 4px 0;
+  }
+
+  .prompt-word-label {
+    font-size: clamp(2rem, 3.8vw, 3.4rem);
+    font-weight: 1000;
+    color: #FFFFFF;
+    text-shadow: 4px 4px 0 var(--ink-black);
+    line-height: 1.1;
+    text-align: center;
+  }
+
+  .tts-circle-btn {
+    background: var(--neon-cyan);
+    border: 3px solid var(--ink-black);
+    box-shadow: 0 4px 0 var(--ink-black);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.08s;
+    flex-shrink: 0;
+  }
+  .tts-circle-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--ink-black);
+  }
+
+  /* 1. MAX-SIZE 4-PICTURE GRID (Takes 100% of remaining vertical & horizontal space!) */
+  .grid-max-4-pics {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .card-pic-max {
+    background: #FFFFFF;
+    border: var(--stroke-chunky);
+    box-shadow: var(--shadow-chunky);
+    border-radius: 24px;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 6px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.08s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-pic-max:hover { transform: translateY(-2px); }
+  .card-pic-max:active {
+    transform: translateY(6px);
+    box-shadow: var(--shadow-pressed);
+  }
+  .card-pic-max img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 18px;
+    display: block;
+  }
+
+  /* 2. MAX-SIZE SINGLE HERO PHOTO (Stretches to maximum possible height) */
+  .hero-photo-stage {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    background: #FFFFFF;
+    border: var(--stroke-mega);
+    box-shadow: var(--shadow-deep);
+    border-radius: 28px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-photo-stage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .grid-word-choices-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .card-word-btn {
+    background: #FFFFFF;
+    border: var(--stroke-chunky);
+    box-shadow: var(--shadow-chunky);
+    border-radius: 22px;
+    padding: 14px 10px;
+    font-size: clamp(1.4rem, 2.3vw, 2.1rem);
+    font-weight: 1000;
+    color: var(--ink-black);
+    cursor: pointer;
+    text-align: center;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.08s ease;
+  }
+  .card-word-btn:hover { background: #FFFBEB; }
+  .card-word-btn:active {
+    transform: translateY(5px);
+    box-shadow: var(--shadow-pressed);
+  }
+
+  /* CORRECT / WRONG FEEDBACK */
+  .card-pic-max.correct, .card-word-btn.correct, .spotter-key.correct {
+    background: var(--neon-lime) !important;
+    border-color: #047857 !important;
+    transform: scale(1.02) !important;
+    color: #FFFFFF !important;
+  }
+  .card-pic-max.wrong, .card-word-btn.wrong, .spotter-key.wrong {
+    background: var(--neon-pink) !important;
+    border-color: #9F1239 !important;
+    color: #FFFFFF !important;
+    animation: shakeAnim 0.35s;
+  }
+  @keyframes shakeAnim {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-10px); }
+    40%, 80% { transform: translateX(10px); }
+  }
+
+  /* 3. SENTENCE BUILDER */
+  .sentence-drop-area {
+    min-height: 90px;
+    width: 100%;
+    background: #FFFFFF;
+    border: 5px dashed var(--ink-black);
+    box-shadow: var(--shadow-chunky);
+    border-radius: 26px;
+    padding: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .sentence-bank-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    width: 100%;
+    margin-top: auto;
+    padding-bottom: 8px;
+  }
+  .token-tile {
+    background: var(--neon-yellow);
+    border: 4px solid var(--ink-black);
+    box-shadow: 0 5px 0 var(--ink-black);
+    color: var(--ink-black);
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+    font-weight: 1000;
+    padding: 12px 24px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.08s ease;
+  }
+  .token-tile:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 var(--ink-black);
+  }
+  .token-tile.placed {
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  /* 4. 9-PANEL SPOTTING GAME */
+  .spotter-timer-bar {
+    width: 100%;
+    height: 16px;
+    background: #FFFFFF;
+    border: 3px solid var(--ink-black);
+    border-radius: 14px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .spotter-timer-fill {
+    height: 100%;
+    width: 100%;
+    background: var(--neon-pink);
+    transition: width 0.1s linear;
+  }
+
+  .grid-9-giant {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .spotter-key {
+    background: #FFFFFF;
+    border: var(--stroke-chunky);
+    box-shadow: var(--shadow-chunky);
+    border-radius: 22px;
+    padding: 6px;
+    font-size: clamp(1.2rem, 2vw, 1.7rem);
+    font-weight: 1000;
+    color: var(--ink-black);
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.08s ease;
+  }
+  .spotter-key:active {
+    transform: translateY(5px);
+    box-shadow: var(--shadow-pressed);
+  }
+
+  /* RETAKE & STUDENT SELECTION SCREENS */
+  .center-dialog-box {
+    background: var(--neon-yellow);
+    border: var(--stroke-mega);
+    box-shadow: var(--shadow-deep);
+    padding: 30px;
+    border-radius: 36px;
+    text-align: center;
+    max-width: 760px;
+    margin: auto;
+    width: 100%;
+  }
+
+  .roster-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    width: 100%;
+    height: calc(100vh - 170px);
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  .student-pill-btn {
+    background: #FFFFFF;
+    border: 4px solid var(--ink-black);
+    box-shadow: 0 6px 0 var(--ink-black);
+    border-radius: 22px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: all 0.08s ease;
+  }
+  .student-pill-btn:hover { background: #FFFBEB; transform: translateY(-2px); }
+  .student-pill-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 var(--ink-black);
+  }
+
+  .cand-num-circle {
+    width: 44px;
+    height: 44px;
+    background: var(--neon-yellow);
+    border: 3px solid var(--ink-black);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 1000;
+    flex-shrink: 0;
+  }
+
+  .cand-name-title {
+    font-size: 1.25rem;
+    font-weight: 1000;
+    color: var(--ink-black);
+    line-height: 1.2;
+  }
+
+  /* SJKC NAN HWA OFFICIAL DIPLOMA CERTIFICATE */
+  #certModalOverlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(8px);
+    z-index: 5000;
+    overflow-y: auto;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+  #certModalOverlay.active { display: flex; }
+
+  .cert-paper {
+    background: #FFFEFA;
+    border: 16px solid #1E3A8A;
+    outline: 6px solid var(--neon-yellow);
+    outline-offset: -12px;
+    padding: 36px 30px;
+    text-align: center;
+    max-width: 900px;
+    width: 100%;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+    border-radius: 6px;
+  }
+
+  /* PASSCODE MODAL */
+  #passcodeModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.75);
+    z-index: 6000;
+    align-items: center;
+    justify-content: center;
+  }
+  .passcode-box {
+    background: #FFFFFF;
+    border: var(--stroke-mega);
+    box-shadow: var(--shadow-deep);
+    padding: 30px;
+    border-radius: 28px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+  }
+  .passcode-box input {
+    width: 100%;
+    padding: 12px;
+    margin: 16px 0;
+    border: 4px solid var(--ink-black);
+    border-radius: 14px;
+    font-size: 1.3rem;
+    font-weight: 900;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="arcade-viewport" id="viewportMain">
+  <!-- Slim Status Strip -->
+  <header class="top-strip">
+    <div class="school-badge">
+      SJKC NAN HWA <span>Year 4 Ba Ba Dum</span>
+    </div>
+    <div class="strip-buttons">
+      <button class="tactile-btn-sm" id="btnAspectToggle" onclick="toggleAspect()">📱 Mobile Mode</button>
+      <button class="tactile-btn-sm" style="background:var(--neon-pink); color:#FFF;" onclick="openPasscodePrompt()">⚡ Quick Test</button>
+    </div>
+  </header>
+
+  <!-- SCREEN 0: PRELOADER -->
+  <section class="screen-pane active" id="panePreload">
+    <div style="background:#FFF; border:var(--stroke-chunky); box-shadow:var(--shadow-deep); padding:36px; border-radius:30px; max-width:480px; width:90%; display:flex; flex-direction:column; align-items:center; gap:16px;">
+      <div class="spinner-tactile"></div>
+      <h2 style="font-size:2rem; font-weight:1000; color:var(--ink-black);">Preloading 43 Visuals...</h2>
+      <p id="preloadCounter" style="font-size:1.3rem; font-weight:900; color:#64748B;">Loaded: 0 / 43</p>
+    </div>
+  </section>
+
+  <!-- SCREEN 1: START SCREEN -->
+  <section class="screen-pane" id="paneStart">
+    <div class="hero-container">
+      <h1 class="hero-title">ENGLISH ARCADE</h1>
+      <div class="hero-tag">SJKC NAN HWA • Get Smart Plus 4 (Modules 1 - 10)</div>
+
+      <div class="aspect-select-row">
+        <div class="aspect-card" id="cardAspectPhone" onclick="setAspect('phone')">
+          <div style="font-size:2.8rem;">📱</div>
+          Phone Screen
+        </div>
+        <div class="aspect-card selected" id="cardAspectDesktop" onclick="setAspect('desktop')">
+          <div style="font-size:2.8rem;">💻</div>
+          Desktop Fullscreen
+        </div>
+      </div>
+
+      <button class="btn-giant-start" onclick="launchArcade()">START ARCADE ➔</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 2: GAMEPLAY (MAX VISUAL DIMENSIONS) -->
+  <section class="screen-pane" id="paneGame">
+    <div class="hud-strip">
+      <div class="hud-badge" id="hudQuestionNo">Q: 1 / 45</div>
+      <div class="hud-mode" id="hudModeTitle">PICTURE MATCH</div>
+      <div class="hud-badge" id="hudScoreCount" style="color:#059669;">Score: 0</div>
+    </div>
+
+    <div class="progress-edge-track">
+      <div class="progress-edge-fill" id="hudProgressFill"></div>
+    </div>
+
+    <div class="stage-fill" id="stageCanvas">
+      <!-- Maximized game layout injected here -->
+    </div>
+  </section>
+
+  <!-- SCREEN 3: RETAKE MISTAKES -->
+  <section class="screen-pane" id="paneRetake">
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;">
+      <div class="center-dialog-box">
+        <h2 style="font-size:2.5rem; font-weight:1000; color:var(--ink-black); margin-bottom:10px;">⚠️ RETAKE ROUND</h2>
+        <p style="font-size:1.4rem; font-weight:900; color:#7C2D12;" id="retakeInfoTxt">
+          Progress reached 100%! You missed 0 questions. You must ace at least 60% of them to unlock your SJKC NAN HWA Certificate!
+        </p>
+      </div>
+      <button class="btn-giant-start" onclick="startRetakeRun()">START RETAKE RUN ➔</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 4: CLASS ROSTER (21 STUDENTS) -->
+  <section class="screen-pane" id="paneRoster">
+    <div style="text-align:center; margin-bottom:10px; flex-shrink:0;">
+      <h1 style="font-size:2.8rem; font-weight:1000; color:var(--neon-yellow); text-shadow:3px 3px 0 #000;">
+        MASTERY ACHIEVED! 🏆
+      </h1>
+      <p style="font-size:1.3rem; font-weight:900; color:#FFFFFF;">
+        Click your assigned number to generate your SJKC NAN HWA Certificate:
+      </p>
+    </div>
+
+    <div class="roster-grid-container" id="rosterListArea">
+      <!-- 21 Students injected here -->
+    </div>
+  </section>
+</div>
+
+<!-- SJKC NAN HWA DIPLOMA CERTIFICATE -->
+<div id="certModalOverlay">
+  <div style="display:flex; flex-direction:column; align-items:center; gap:14px; max-width:920px; width:100%;">
+    <div class="cert-paper" id="certCaptureSheet">
+      <div style="font-size:2.3rem; font-weight:1000; color:#1E3A8A; letter-spacing:1px;">
+        SJK (C) NAN HWA
+      </div>
+      <div style="font-size:1.55rem; font-weight:900; color:#B45309; letter-spacing:3px; margin-top:2px;">
+        南华国民型华文小学
+      </div>
+      <div style="font-size:1.05rem; font-weight:900; letter-spacing:2px; color:#475569; margin-top:6px; border-bottom:3px solid #CBD5E1; display:inline-block; padding-bottom:4px; text-transform:uppercase;">
+        English Language Panel • Primary Year 4 Arcade Assessment
+      </div>
+
+      <div style="font-size:1.9rem; font-weight:1000; color:#B45309; margin: 14px 0 4px 0;">
+        CERTIFICATE OF ACHIEVEMENT
+      </div>
+
+      <p style="font-size:1.2rem; font-style:italic; color:#64748B;">This is to certify that</p>
+      
+      <div style="font-size:2.5rem; font-weight:1000; color:#0F172A; border-bottom:4px solid #0F172A; display:inline-block; padding:4px 50px; margin:8px auto;" id="certStudentName">
+        STUDENT NAME
+      </div>
+
+      <p style="font-size:1.15rem; font-weight:800; color:#334155; max-width:740px; margin:10px auto; line-height:1.5;">
+        has successfully completed and mastered the <strong>Get Smart Plus 4 DIY Arcade Assessment</strong>, demonstrating verified competence in Vocabulary, Listening, Rapid-Spelling, and Sentence Syntax across Modules 1 to 10.
+      </p>
+
+      <div style="display:flex; justify-content:center; gap:32px; font-size:1.1rem; font-weight:1000; color:#1E3A8A; margin: 14px 0;">
+        <div>Candidate No: <span id="certCandNo" style="color:#EA580C;">01</span></div>
+        <div>Result: <span style="color:#059669;">100% MASTERY VERIFIED</span></div>
+        <div>Date: <span id="certDateVal">09 Oct 2026</span></div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:28px; padding:0 24px;">
+        <div style="text-align:center; font-size:0.95rem; font-weight:900; color:#334155;">
+          <div style="width:180px; border-bottom:2px solid #0F172A; margin-bottom:6px;"></div>
+          Head of English Panel<br>SJKC NAN HWA
+        </div>
+
+        <div style="width:90px; height:90px; border-radius:50%; border:5px double #D97706; background:#FEF3C7; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:1000; font-size:0.8rem; color:#92400E;">
+          <span>SJKC</span>
+          <span style="font-size:0.95rem;">NAN HWA</span>
+          <span>OFFICIAL</span>
+        </div>
+
+        <div style="text-align:center; font-size:0.95rem; font-weight:900; color:#334155;">
+          <div style="width:180px; border-bottom:2px solid #0F172A; margin-bottom:6px;"></div>
+          Headmaster (Guru Besar)<br>SJKC NAN HWA
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:12px; width:100%;">
+      <button class="tactile-btn-sm" onclick="closeCertModal()">Back</button>
+      <button class="tactile-btn-sm" style="background:var(--neon-cyan); font-size:1.15rem; padding:10px 24px;" onclick="downloadCertPdf()">
+        📥 Download Official PDF
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PASSCODE MODAL -->
+<div id="passcodeModal">
+  <div class="passcode-box">
+    <h2 style="font-size:1.7rem; font-weight:1000; color:var(--ink-black);">Teacher Bypass</h2>
+    <p style="font-size:0.95rem; font-weight:800; color:#64748B; margin-top:4px;">Enter passcode to generate certificates immediately:</p>
+    <input type="password" id="inputPasscode" placeholder="Enter Passcode">
+    <div style="display:flex; gap:10px; justify-content:center;">
+      <button class="tactile-btn-sm" onclick="closePasscodePrompt()">Cancel</button>
+      <button class="tactile-btn-sm" style="background:var(--neon-lime); color:#FFF;" onclick="submitPasscode()">Unlock</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   1. 21 STUDENTS ROSTER - SJKC NAN HWA
+   ========================================================================= */
+const ROSTER_21 = [
+  "BOK KHAI HAO",
+  "CHAN JIE YU",
+  "CHOO MING EN",
+  "GAN RUI YIING",
+  "GAN YU ZHE",
+  "GOH JUN HEN",
+  "JAYDEN SIM JIA HAO",
+  "JOLIN TOW SHI MIN",
+  "KOO EN ZE",
+  "LE THI KIEU NHI",
+  "LEE SHI JUN",
+  "LIM JIA HAO",
+  "LIM YOU JIE",
+  "MASON LOH MING XUAN",
+  "NG EN HAO",
+  "NG MIN YUE",
+  "TAN YEN SEE",
+  "TOH PIN JOE",
+  "TOW HAO REN",
+  "YEO JOEY",
+  "ZITLE ONG"
+];
+
+/* =========================================================================
+   2. 43 PRECISE USER-PROVIDED IMAGE ASSETS
+   ========================================================================= */
+const ASSETS_MAP = {
+  "pyramid": "https://i.postimg.cc/659S7wvj/Ancient-Egyptian-stone-pyramid.webp",
+  "badminton": "https://i.postimg.cc/MKdLV40q/badminton.webp",
+  "bag of crisps": "https://i.postimg.cc/GhcNBrD1/bag-of-crisps.jpg",
+  "bar of chocolate": "https://i.postimg.cc/rF8bdc4k/bar-of-chocolate.jpg",
+  "zebra crossing": "https://i.postimg.cc/sfPqD1vW/Black-and-white-pedestrian-road-crossing.jpg",
+  "can of lemonade": "https://i.postimg.cc/NfgVyYXt/can-of-lemonade.jpg",
+  "carton of milk": "https://i.postimg.cc/KvZVKFTZ/carton-of-milk.png",
+  "treasure": "https://i.postimg.cc/WpmCbthW/Chest-with-gold-relics-and-coins.jpg",
+  "cricket": "https://i.postimg.cc/bJkMnwLh/cricket.webp",
+  "helmet": "https://i.postimg.cc/bNzMG8tT/Cycling-safety-helmet.avif",
+  "mummy": "https://i.postimg.cc/ncH5sZDT/Egyptian-mummy-wrapped-in-linen.webp",
+  "feed the fish": "https://i.postimg.cc/tCXf1y6q/feed-the-fish.jpg",
+  "gondola": "https://i.postimg.cc/YqpV4kWs/gondola.jpg",
+  "gorilla": "https://i.postimg.cc/V6nTtk46/gorilla.jpg",
+  "high jump": "https://i.postimg.cc/B6HyFnNJ/high-jump.webp",
+  "ice hockey": "https://i.postimg.cc/NMmVXjbq/ice-hockey.jpg",
+  "javelin": "https://i.postimg.cc/wvLPNjFj/javelin.jpg",
+  "jellyfish": "https://i.postimg.cc/gjp7HbBD/jellyfish.webp",
+  "kneepad": "https://i.postimg.cc/3Rm6Gx1f/kneepad.avif",
+  "ostrich": "https://i.postimg.cc/TwgSb3QY/ostrich.jpg",
+  "pavement": "https://i.postimg.cc/kMNzXDBK/Pedestrian-walkway-sidewalk.webp",
+  "cough": "https://i.postimg.cc/ncH5sZDw/Person-coughing.jpg",
+  "stomach ache": "https://i.postimg.cc/3NZcLfPf/Person-holding-hurting-abdomen.webp",
+  "toothache": "https://i.postimg.cc/595TNj6H/Person-holding-painful-cheek-jaw.jpg",
+  "headache": "https://i.postimg.cc/RhTDPpjs/Person-pressing-forehead-in-pain.jpg",
+  "tomb": "https://i.postimg.cc/mZ3J2hty/Pharaoh-burial-chamber-sarcophagus.jpg",
+  "plaster": "https://i.postimg.cc/mk4nyW6N/plaster.jpg",
+  "rake leaves": "https://i.postimg.cc/X7QPdhKv/rake-leaves.jpg",
+  "recycling": "https://i.postimg.cc/L5SW3F08/recycling.webp",
+  "rhino": "https://i.postimg.cc/D0hNP3Y7/rhino.webp",
+  "set the table": "https://i.postimg.cc/jds9WKfq/set-the-table.jpg",
+  "shovel snow": "https://i.postimg.cc/KvJWBV7z/shovel-snow.jpg",
+  "fever": "https://i.postimg.cc/7hNWBtpF/Sick-child-with-thermometer-forehead-cloth.png",
+  "sleeping bag": "https://i.postimg.cc/L5SW3F0X/sleeping-bag.webp",
+  "snail": "https://i.postimg.cc/qRyYKvQq/snail.jpg",
+  "snowmobile": "https://i.postimg.cc/159TgPqT/snowmobile.jpg",
+  "squirrel": "https://i.postimg.cc/1XSdr1Y9/squirrel.jpg",
+  "sunscreen": "https://i.postimg.cc/L5SW3F0g/sunscreen.jpg",
+  "take out the rubbish": "https://i.postimg.cc/pX279xjL/take-out-the-rubbish.webp",
+  "tent": "https://i.postimg.cc/nrxWGfwX/tent.avif",
+  "torch": "https://i.postimg.cc/902kYHNr/torch.jpg",
+  "tuk-tuk": "https://i.postimg.cc/rF8bdcr7/tuk-tuk.jpg",
+  "seat belt": "https://i.postimg.cc/nVKgcMCr/Vehicle-safety-belt-buckled.jpg"
+};
+
+/* =========================================================================
+   3. AUDIO (UK TTS & ARCADE SOUNDS)
+   ========================================================================= */
+const AudioPlayer = {
+  ctx: null,
+  init() {
+    if (!this.ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      this.ctx = new AC();
+    }
+  },
+  beep(freq, type, dur) {
+    try {
+      this.init();
+      const osc = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      g.gain.setValueAtTime(0.25, this.ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + dur);
+      osc.connect(g);
+      g.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + dur);
+    } catch(e) {}
+  },
+  ding() {
+    this.beep(587.33, 'triangle', 0.12);
+    setTimeout(() => this.beep(880, 'triangle', 0.22), 90);
+  },
+  buzz() {
+    this.beep(150, 'sawtooth', 0.35);
+  }
+};
+
+function speakShortUK(text) {
+  const shortText = text.trim();
+  const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en-GB&q=${encodeURIComponent(shortText)}`;
+  const audio = new Audio();
+  audio.src = url;
+  audio.play().catch(() => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(shortText);
+      utter.lang = 'en-GB';
+      utter.rate = 0.92;
+      window.speechSynthesis.speak(utter);
+    }
+  });
+}
+
+/* =========================================================================
+   4. 45 CURRICULUM QUESTIONS (Modules 1 - 10)
+   ========================================================================= */
+const QUESTIONS = [
+  // 1-12: Word to 4 Pictures (Max Dimensions)
+  { id: 1, type: "word_to_4_pics", target: "ice hockey", choices: ["ice hockey", "cricket", "badminton", "high jump"] },
+  { id: 2, type: "word_to_4_pics", target: "feed the fish", choices: ["feed the fish", "rake leaves", "shovel snow", "set the table"] },
+  { id: 3, type: "word_to_4_pics", target: "bag of crisps", choices: ["bag of crisps", "carton of milk", "bar of chocolate", "can of lemonade"] },
+  { id: 4, type: "word_to_4_pics", target: "high jump", choices: ["high jump", "javelin", "ice hockey", "badminton"] },
+  { id: 5, type: "word_to_4_pics", target: "zebra crossing", choices: ["zebra crossing", "pavement", "helmet", "seat belt"] },
+  { id: 6, type: "word_to_4_pics", target: "sleeping bag", choices: ["sleeping bag", "tent", "torch", "squirrel"] },
+  { id: 7, type: "word_to_4_pics", target: "set the table", choices: ["set the table", "take out the rubbish", "feed the fish", "rake leaves"] },
+  { id: 8, type: "word_to_4_pics", target: "shovel snow", choices: ["shovel snow", "rake leaves", "feed the fish", "set the table"] },
+  { id: 9, type: "word_to_4_pics", target: "take out the rubbish", choices: ["take out the rubbish", "recycling", "set the table", "sleeping bag"] },
+  { id: 10, type: "word_to_4_pics", target: "tuk-tuk", choices: ["tuk-tuk", "gondola", "snowmobile", "helmet"] },
+  { id: 11, type: "word_to_4_pics", target: "can of lemonade", choices: ["can of lemonade", "carton of milk", "bar of chocolate", "bag of crisps"] },
+  { id: 12, type: "word_to_4_pics", target: "bar of chocolate", choices: ["bar of chocolate", "bag of crisps", "can of lemonade", "carton of milk"] },
+
+  // 13-22: Picture to 4 Words (Hero Photo Max Size)
+  { id: 13, type: "pic_to_4_words", target: "pyramid", imageKey: "pyramid", choices: ["pyramid", "tomb", "treasure", "mummy"] },
+  { id: 14, type: "pic_to_4_words", target: "mummy", imageKey: "mummy", choices: ["mummy", "pyramid", "tomb", "gorilla"] },
+  { id: 15, type: "pic_to_4_words", target: "helmet", imageKey: "helmet", choices: ["helmet", "seat belt", "kneepad", "pavement"] },
+  { id: 16, type: "pic_to_4_words", target: "toothache", imageKey: "toothache", choices: ["toothache", "headache", "stomach ache", "cough"] },
+  { id: 17, type: "pic_to_4_words", target: "stomach ache", imageKey: "stomach ache", choices: ["stomach ache", "fever", "toothache", "plaster"] },
+  { id: 18, type: "pic_to_4_words", target: "headache", imageKey: "headache", choices: ["headache", "toothache", "fever", "cough"] },
+  { id: 19, type: "pic_to_4_words", target: "fever", imageKey: "fever", choices: ["fever", "cough", "headache", "stomach ache"] },
+  { id: 20, type: "pic_to_4_words", target: "plaster", imageKey: "plaster", choices: ["plaster", "sunscreen", "sleeping bag", "torch"] },
+  { id: 21, type: "pic_to_4_words", target: "jellyfish", imageKey: "jellyfish", choices: ["jellyfish", "snail", "ostrich", "squirrel"] },
+  { id: 22, type: "pic_to_4_words", target: "sunscreen", imageKey: "sunscreen", choices: ["sunscreen", "plaster", "can of lemonade", "torch"] },
+
+  // 23-32: Sentence Block Rearrangements
+  { id: 23, type: "sentence_rearrange", target: "Always fasten your seat belt.", blocks: ["Always", "fasten", "your", "seat", "belt."] },
+  { id: 24, type: "sentence_rearrange", target: "The Egyptians washed the body first.", blocks: ["The", "Egyptians", "washed", "the", "body", "first."] },
+  { id: 25, type: "sentence_rearrange", target: "She is going to dress up as a soldier.", blocks: ["She", "is", "going", "to", "dress", "up", "as", "a", "soldier."] },
+  { id: 26, type: "sentence_rearrange", target: "Elephants are bigger than rhinos.", blocks: ["Elephants", "are", "bigger", "than", "rhinos."] },
+  { id: 27, type: "sentence_rearrange", target: "How often do you have PE?", blocks: ["How", "often", "do", "you", "have", "PE?"] },
+  { id: 28, type: "sentence_rearrange", target: "He doesn't have to shovel snow.", blocks: ["He", "doesn't", "have", "to", "shovel", "snow."] },
+  { id: 29, type: "sentence_rearrange", target: "You should take some medicine.", blocks: ["You", "should", "take", "some", "medicine."] },
+  { id: 30, type: "sentence_rearrange", target: "Don't stick your head out of the window.", blocks: ["Don't", "stick", "your", "head", "out", "of", "the", "window."] },
+  { id: 31, type: "sentence_rearrange", target: "I always skate before dinner.", blocks: ["I", "always", "skate", "before", "dinner."] },
+  { id: 32, type: "sentence_rearrange", target: "She is the best high jumper in our school.", blocks: ["She", "is", "the", "best", "high", "jumper", "in", "our", "school."] },
+
+  // 33-38: 9-Panel Rapid Spelling Spotter (Long Words, 4 Rounds)
+  {
+    id: 33, type: "nine_panel_spotter", word: "INDEPENDENCE",
+    rounds: [
+      { correct: "INDEPENDENCE", panels: ["INDEPENDENCE", "INDEPENDANCE", "INDEPENDENSE", "INDEPANDENCE", "INDIPENDENCE", "INDEPANDENSE", "INDAPENDENCE", "INDIPENDENSE", "INDEPEDENCE"] },
+      { correct: "INDEPENDENCE", panels: ["INDEPENEDENCE", "INDEPENDENCE", "INDEPENCE", "INDEPENDENS", "INDEEPNDENCE", "INDEPENDACNE", "INDEPENNDENCE", "INDEPEDANCE", "INDEPENDINCE"] },
+      { correct: "INDEPENDENCE", panels: ["INDIPENDANCE", "INDAPENDANCE", "INDEPENDENCE", "INDEPANDANCE", "INDEPENDANS", "INDAPENDENSE", "INDEPANDANC", "INDEPDANCE", "INDIPANDENCE"] },
+      { correct: "INDEPENDENCE", panels: ["INDEPENDENC", "INDEPENDENS", "INDEPENENCE", "INDEPENDANCEE", "INDEPENDENCE", "INDEPPENDENCE", "INDEPNDENCE", "INDEPENNDANCE", "INDIPENDACNE"] }
+    ]
+  },
+  {
+    id: 34, type: "nine_panel_spotter", word: "TYRANNOSAURUS",
+    rounds: [
+      { correct: "TYRANNOSAURUS", panels: ["TYRANNOSAURUS", "TYRANOSAURUS", "TYRANNOSORUS", "TIRANNOSAURUS", "TYRANNOSAURAS", "TYRANOSAURAS", "TIRANOSAURUS", "TYRANNASORUS", "TYRANNASURUS"] },
+      { correct: "TYRANNOSAURUS", panels: ["TYRANNOSAURUS", "TYRANOSORUS", "TYRANNASORAS", "TYRANNOSAURUS", "TYRANOSAURUS", "TYRANNOSORES", "TYRANNOSAUROS", "TYRONNOSAURUS", "TYRANNOZAURUS"] },
+      { correct: "TYRANNOSAURUS", panels: ["TIRANNOSAURAS", "TYRANNOSAURUS", "TYRANNOZORUS", "TYRANNOSOARUS", "TIRANOSAURAS", "TYRANNUSORUS", "TYRANNUSAURUS", "TYRANNISAURUS", "TYRANNASOURUS"] },
+      { correct: "TYRANNOSAURUS", panels: ["TYRANNOSAURUS", "TYRANNOSORIS", "TYRANOSAURUS", "TYRANNOSURUS", "TYRANOZORUS", "TYRANNOSAURUSS", "TIRANNASORUS", "TYRANOSAUROS", "TYRANNOSAURAZ"] }
+    ]
+  },
+  {
+    id: 35, type: "nine_panel_spotter", word: "TUTANKHAMUN",
+    rounds: [
+      { correct: "TUTANKHAMUN", panels: ["TUTANKHAMUN", "TUTANKHAMON", "TUTENKHAMUN", "TUTANKAMUN", "TUTANKHAMEN", "TUTANKAMON", "TOOTANKHAMUN", "TUTENKHAMON", "TUTANKHAAMUN"] },
+      { correct: "TUTANKHAMUN", panels: ["TUTENKAMUN", "TUTANKHAMUN", "TUTANKHOMUN", "TUTANKHAMIN", "TUTANKHAUM", "TUTENKHAMEN", "TUTAKHAMUN", "TUTHANKHAMUN", "TUTANKHUMUN"] },
+      { correct: "TUTANKHAMUN", panels: ["TUTANKHAMON", "TUTANKHAMUN", "TUTANKAMEN", "TUTANHAMUN", "TUTTENKHAMUN", "TUTENKHAMIN", "TOOTENKHAMUN", "TUTANKHANUN", "TUTANKHMUN"] },
+      { correct: "TUTANKHAMUN", panels: ["TUTANKAMUN", "TUTENKAMON", "TUTANKHAMUN", "TUTANKAAMUN", "TUTANKHAMEN", "TUTANKHOMON", "TUTANKHAUM", "TUTENKHAMUN", "TUTHANKAMUN"] }
+    ]
+  },
+  {
+    id: 36, type: "nine_panel_spotter", word: "COMFORTABLE",
+    rounds: [
+      { correct: "COMFORTABLE", panels: ["COMFORTABLE", "COMFORTIBLE", "COMFURTABLE", "COMFTORABLE", "COMFORTABUL", "CONFORTABLE", "COMFORTABAL", "COMFORTUBLE", "COMFRATABLE"] },
+      { correct: "COMFORTABLE", panels: ["COMFORTABLE", "COMFARTABLE", "COMFORTABEL", "CONVERTIBLE", "COMFORTUBLE", "COMFORTIBAL", "COMFURTIBLE", "COMFTRABLE", "COMFORTERBLE"] },
+      { correct: "COMFORTABLE", panels: ["COMFTABLE", "COMFORTABLE", "COMFORTABLEE", "CONFORTIBLE", "COMFURTABEL", "COMFURTABLE", "COMFORTABELL", "COMFORTABILE", "COMFORTUBEL"] },
+      { correct: "COMFORTABLE", panels: ["COMFORTABUL", "COMFURTABLE", "COMFORTABLE", "COMFATABLE", "COMFURTABAL", "CONFURTABLE", "COMFORTIBLE", "COMFARTOBLE", "COMFORTEBLE"] }
+    ]
+  },
+  {
+    id: 37, type: "nine_panel_spotter", word: "CHAMPIONSHIP",
+    rounds: [
+      { correct: "CHAMPIONSHIP", panels: ["CHAMPIONSHIP", "CHAMPIONSHP", "CHAMPYONSHIP", "CHAMPEONSHIP", "CHAMPIONCHIP", "CHAMPIONSHIPPE", "CHAMPONSHIP", "CHAMPIANSHIP", "CHAMPIONSHIPP"] },
+      { correct: "CHAMPIONSHIP", panels: ["CHAMPIONSHIP", "CHAMPONSHIP", "CHAMPIENSHIP", "CHAMPIONSHIP", "CHAMPYONSHP", "CHAMPINSHIP", "CHAMPIONCHEAP", "CHAMPIONSHYP", "CHAMPIONNSHIP"] },
+      { correct: "CHAMPIONSHIP", panels: ["CHAMPEANSHIP", "CHAMPIONSHIP", "CHAMPIONTSHIP", "CHAMPYONCHIP", "CHAMPIONSHEP", "CHAMPIUNSHIP", "CHAMPIONSHUP", "CHAMPONSHIPP", "CHAMPIONSHIPY"] },
+      { correct: "CHAMPIONSHIP", panels: ["CHAMPONSHIP", "CHAMPIONCHIP", "CHAMPIONSHIP", "CHAMPYONSHIP", "CHAMPEONCHIP", "CHAMPIENSHIPP", "CHAMPIONSIHP", "CHAMPEONSHP", "CHAMPIONSIP"] }
+    ]
+  },
+  {
+    id: 38, type: "nine_panel_spotter", word: "UTAHRAPTOR",
+    rounds: [
+      { correct: "UTAHRAPTOR", panels: ["UTAHRAPTOR", "UTARAPTOR", "UTAHROPTOR", "UTAHAPTER", "UTAHREPTOR", "UTAHRAPTER", "UTAHROPTUR", "UTAHROPTAR", "UTTARAPTOR"] },
+      { correct: "UTAHRAPTOR", panels: ["UTARAPTER", "UTAHRAPTOR", "UTAHROPTER", "UTAHREPTUR", "UTHAHRAPTOR", "UTAHRPATOR", "UTAHRAUPTOR", "UTAHREPTAR", "UTAROPTER"] },
+      { correct: "UTAHRAPTOR", panels: ["UTAHROPTER", "UTARAPTOR", "UTAHRAPTOR", "UTAHRAPTUR", "UTAHROPTIR", "UTAHRAPTORE", "UTAHROPTERR", "UTTARAPTER", "UTAHREPTR"] },
+      { correct: "UTAHRAPTOR", panels: ["UTAHROPTOR", "UTAHREPTOR", "UTAHRAPTOR", "UTAHAPTER", "UTAHRAAPTOR", "UTARAPTER", "UTAHREPTUR", "UTAHROPTAR", "UTAHRPTER"] }
+    ]
+  },
+
+  // 39-45: Multi-Word Picture Recognition
+  { id: 39, type: "pic_to_4_words", target: "carton of milk", imageKey: "carton of milk", choices: ["carton of milk", "can of lemonade", "bar of chocolate", "bag of crisps"] },
+  { id: 40, type: "pic_to_4_words", target: "rake leaves", imageKey: "rake leaves", choices: ["rake leaves", "shovel snow", "feed the fish", "set the table"] },
+  { id: 41, type: "pic_to_4_words", target: "gondola", imageKey: "gondola", choices: ["gondola", "tuk-tuk", "snowmobile", "javelin"] },
+  { id: 42, type: "pic_to_4_words", target: "snowmobile", imageKey: "snowmobile", choices: ["snowmobile", "gondola", "tuk-tuk", "sleeping bag"] },
+  { id: 43, type: "pic_to_4_words", target: "javelin", imageKey: "javelin", choices: ["javelin", "high jump", "cricket", "badminton"] },
+  { id: 44, type: "pic_to_4_words", target: "badminton", imageKey: "badminton", choices: ["badminton", "ice hockey", "high jump", "cricket"] },
+  { id: 45, type: "pic_to_4_words", target: "cricket", imageKey: "cricket", choices: ["cricket", "ice hockey", "badminton", "javelin"] }
+];
+
+/* =========================================================================
+   5. GAME STATE & PRELOADER
+   ========================================================================= */
+const gState = {
+  aspect: 'desktop',
+  queue: [],
+  currentIndex: 0,
+  score: 0,
+  missedList: [],
+  isRetake: false,
+  retakeQueue: [],
+  retakeIndex: 0,
+  retakeCorrectCount: 0,
+  activeQ: null,
+  placedTokens: [],
+  spotterRound: 0,
+  spotterTimer: null
+};
+
+function preloadAllVisuals() {
+  const keys = Object.keys(ASSETS_MAP);
+  let loaded = 0;
+  const total = keys.length;
+  const label = document.getElementById('preloadCounter');
+
+  const onDone = () => {
+    setTimeout(() => {
+      showPane('paneStart');
+    }, 300);
+  };
+
+  keys.forEach(k => {
+    const img = new Image();
+    img.src = ASSETS_MAP[k];
+    img.onload = () => {
+      loaded++;
+      label.textContent = `Loaded: ${loaded} / ${total}`;
+      if (loaded >= total) onDone();
+    };
+    img.onerror = () => {
+      loaded++;
+      label.textContent = `Loaded: ${loaded} / ${total}`;
+      if (loaded >= total) onDone();
+    };
+  });
+
+  setTimeout(() => {
+    if (loaded < total) onDone();
+  }, 3500);
+}
+
+function showPane(id) {
+  document.querySelectorAll('.screen-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function toggleAspect() {
+  setAspect(gState.aspect === 'desktop' ? 'phone' : 'desktop');
+}
+
+function setAspect(mode) {
+  gState.aspect = mode;
+  const btn = document.getElementById('btnAspectToggle');
+  const cPhone = document.getElementById('cardAspectPhone');
+  const cDesk = document.getElementById('cardAspectDesktop');
+
+  if (mode === 'phone') {
+    btn.textContent = '💻 Desktop Mode';
+    cPhone.classList.add('selected');
+    cDesk.classList.remove('selected');
+  } else {
+    btn.textContent = '📱 Mobile Mode';
+    cDesk.classList.add('selected');
+    cPhone.classList.remove('selected');
+  }
+}
+
+function launchArcade() {
+  gState.queue = [...QUESTIONS].sort(() => Math.random() - 0.5);
+  gState.currentIndex = 0;
+  gState.score = 0;
+  gState.missedList = [];
+  gState.isRetake = false;
+  showPane('paneGame');
+  renderActiveQuestion();
+}
+
+function renderActiveQuestion() {
+  clearInterval(gState.spotterTimer);
+  const list = gState.isRetake ? gState.retakeQueue : gState.queue;
+  const idx = gState.isRetake ? gState.retakeIndex : gState.currentIndex;
+
+  if (idx >= list.length) {
+    onRoundCompleted();
+    return;
+  }
+
+  const q = list[idx];
+  gState.activeQ = q;
+
+  // Update HUD
+  const total = list.length;
+  document.getElementById('hudQuestionNo').textContent = `${gState.isRetake ? 'Retake' : 'Q'}: ${idx + 1} / ${total}`;
+  document.getElementById('hudScoreCount').textContent = `Score: ${gState.score}`;
+  const pct = Math.round((idx / total) * 100);
+  document.getElementById('hudProgressFill').style.width = `${pct}%`;
+
+  const canvas = document.getElementById('stageCanvas');
+  canvas.innerHTML = '';
+
+  if (q.type === 'word_to_4_pics') {
+    renderWordTo4PicsMax(q, canvas);
+  } else if (q.type === 'pic_to_4_words') {
+    renderPicTo4WordsMax(q, canvas);
+  } else if (q.type === 'sentence_rearrange') {
+    renderSentenceRearrange(q, canvas);
+  } else if (q.type === 'nine_panel_spotter') {
+    renderNinePanelSpotter(q, canvas);
+  }
+}
+
+/* 1. MAX-DIMENSION 4-PICTURE GRID (Fills entire screen remaining height) */
+function renderWordTo4PicsMax(q, canvas) {
+  document.getElementById('hudModeTitle').textContent = 'PICTURE MATCH';
+  speakShortUK(q.target);
+
+  // Compact prompt strip at top
+  const strip = document.createElement('div');
+  strip.className = 'prompt-strip';
+
+  const label = document.createElement('div');
+  label.className = 'prompt-word-label';
+  label.textContent = q.target;
+
+  const audioBtn = document.createElement('button');
+  audioBtn.className = 'tts-circle-btn';
+  audioBtn.textContent = '🔊';
+  audioBtn.onclick = () => speakShortUK(q.target);
+
+  strip.appendChild(label);
+  strip.appendChild(audioBtn);
+
+  // 100% Height 4-Pictures Grid
+  const grid = document.createElement('div');
+  grid.className = 'grid-max-4-pics';
+
+  const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
+  shuffled.forEach(choice => {
+    const card = document.createElement('button');
+    card.className = 'card-pic-max';
+    const img = document.createElement('img');
+    img.src = ASSETS_MAP[choice] || '';
+    img.alt = choice;
+    card.appendChild(img);
+    card.onclick = () => verifyCardChoice(card, choice, q.target);
+    grid.appendChild(card);
+  });
+
+  canvas.appendChild(strip);
+  canvas.appendChild(grid);
+}
+
+/* 2. MAX-DIMENSION HERO PHOTO (Expands up to 60vh) */
+function renderPicTo4WordsMax(q, canvas) {
+  document.getElementById('hudModeTitle').textContent = 'WORD DETECTIVE';
+  speakShortUK(q.target);
+
+  // Slim audio replay strip
+  const strip = document.createElement('div');
+  strip.className = 'prompt-strip';
+  const audioBtn = document.createElement('button');
+  audioBtn.className = 'tts-circle-btn';
+  audioBtn.style.width = '48px';
+  audioBtn.style.height = '48px';
+  audioBtn.textContent = '🔊';
+  audioBtn.onclick = () => speakShortUK(q.target);
+  const hintText = document.createElement('div');
+  hintText.className = 'prompt-word-label';
+  hintText.style.fontSize = '1.8rem';
+  hintText.textContent = "What is this?";
+  strip.appendChild(hintText);
+  strip.appendChild(audioBtn);
+
+  // Giant hero photo stage
+  const photoStage = document.createElement('div');
+  photoStage.className = 'hero-photo-stage';
+  const img = document.createElement('img');
+  img.src = ASSETS_MAP[q.imageKey] || '';
+  img.alt = q.target;
+  photoStage.appendChild(img);
+
+  // Bottom 4-Word Choices Grid
+  const choicesGrid = document.createElement('div');
+  choicesGrid.className = 'grid-word-choices-row';
+
+  const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
+  shuffled.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.className = 'card-word-btn';
+    btn.textContent = choice;
+    btn.onclick = () => verifyCardChoice(btn, choice, q.target);
+    choicesGrid.appendChild(btn);
+  });
+
+  canvas.appendChild(strip);
+  canvas.appendChild(photoStage);
+  canvas.appendChild(choicesGrid);
+}
+
+function verifyCardChoice(el, chosen, target) {
+  const allCards = document.querySelectorAll('.card-pic-max, .card-word-btn');
+  allCards.forEach(c => c.style.pointerEvents = 'none');
+
+  if (chosen.toLowerCase() === target.toLowerCase()) {
+    el.classList.add('correct');
+    AudioPlayer.ding();
+    gState.score += 10;
+    if (gState.isRetake) gState.retakeCorrectCount++;
+    setTimeout(stepToNextQuestion, 550);
+  } else {
+    el.classList.add('wrong');
+    AudioPlayer.buzz();
+    if (!gState.isRetake) {
+      if (!gState.missedList.some(m => m.id === gState.activeQ.id)) {
+        gState.missedList.push(gState.activeQ);
+      }
+    }
+    setTimeout(stepToNextQuestion, 1000);
+  }
+}
+
+/* 3. SENTENCE BUILDER */
+function renderSentenceRearrange(q, canvas) {
+  document.getElementById('hudModeTitle').textContent = 'SENTENCE BUILDER';
+  gState.placedTokens = [];
+
+  const strip = document.createElement('div');
+  strip.className = 'prompt-strip';
+  const label = document.createElement('div');
+  label.className = 'prompt-word-label';
+  label.style.fontSize = '2.2rem';
+  label.textContent = "Arrange the sentence:";
+  strip.appendChild(label);
+
+  const dropZone = document.createElement('div');
+  dropZone.className = 'sentence-drop-area';
+
+  const bankZone = document.createElement('div');
+  bankZone.className = 'sentence-bank-area';
+
+  const shuffled = [...q.blocks].sort(() => Math.random() - 0.5);
+  shuffled.forEach((wordText, i) => {
+    const token = document.createElement('button');
+    token.className = 'token-tile';
+    token.textContent = wordText;
+
+    token.onclick = () => {
+      if (!token.classList.contains('placed')) {
+        token.classList.add('placed');
+        gState.placedTokens.push({ text: wordText, origin: token });
+
+        const placedTile = document.createElement('button');
+        placedTile.className = 'token-tile';
+        placedTile.style.background = 'var(--neon-lime)';
+        placedTile.style.color = '#FFF';
+        placedTile.textContent = wordText;
+
+        placedTile.onclick = () => {
+          token.classList.remove('placed');
+          gState.placedTokens = gState.placedTokens.filter(t => t.origin !== token);
+          dropZone.removeChild(placedTile);
+        };
+        dropZone.appendChild(placedTile);
+
+        if (gState.placedTokens.length === q.blocks.length) {
+          const resultStr = gState.placedTokens.map(t => t.text).join(' ');
+          if (resultStr === q.target) {
+            AudioPlayer.ding();
+            dropZone.style.borderColor = 'var(--neon-lime)';
+            gState.score += 15;
+            if (gState.isRetake) gState.retakeCorrectCount++;
+            setTimeout(stepToNextQuestion, 600);
+          } else {
+            AudioPlayer.buzz();
+            dropZone.style.borderColor = 'var(--neon-pink)';
+            if (!gState.isRetake) {
+              if (!gState.missedList.some(m => m.id === gState.activeQ.id)) {
+                gState.missedList.push(gState.activeQ);
+              }
+            }
+            setTimeout(stepToNextQuestion, 1100);
+          }
+        }
+      }
+    };
+    bankZone.appendChild(token);
+  });
+
+  canvas.appendChild(strip);
+  canvas.appendChild(dropZone);
+  canvas.appendChild(bankZone);
+}
+
+/* 4. 9-PANEL SPOTTING GAME */
+function renderNinePanelSpotter(q, canvas) {
+  document.getElementById('hudModeTitle').textContent = 'SPELLING SPOTTER';
+  gState.spotterRound = 0;
+  speakShortUK(q.word);
+  renderSubSpotterRound(q, canvas);
+}
+
+function renderSubSpotterRound(q, canvas) {
+  clearInterval(gState.spotterTimer);
+  canvas.innerHTML = '';
+
+  const roundObj = q.rounds[gState.spotterRound];
+  const roundNo = gState.spotterRound + 1;
+
+  const strip = document.createElement('div');
+  strip.className = 'prompt-strip';
+  const label = document.createElement('div');
+  label.className = 'prompt-word-label';
+  label.innerHTML = `Spot Correct Spelling! <span style="color:var(--neon-yellow); font-size:1.8rem;">(Round ${roundNo} / 4)</span>`;
+  strip.appendChild(label);
+
+  const timerBar = document.createElement('div');
+  timerBar.className = 'spotter-timer-bar';
+  const timerFill = document.createElement('div');
+  timerFill.className = 'spotter-timer-fill';
+  timerBar.appendChild(timerFill);
+
+  const grid = document.createElement('div');
+  grid.className = 'grid-9-giant';
+
+  const shuffledPanels = [...roundObj.panels].sort(() => Math.random() - 0.5);
+  shuffledPanels.forEach(panelText => {
+    const tile = document.createElement('button');
+    tile.className = 'spotter-key';
+    tile.textContent = panelText;
+
+    tile.onclick = () => {
+      clearInterval(gState.spotterTimer);
+      if (panelText === roundObj.correct) {
+        tile.classList.add('correct');
+        AudioPlayer.ding();
+
+        if (gState.spotterRound < 3) {
+          gState.spotterRound++;
+          setTimeout(() => renderSubSpotterRound(q, canvas), 450);
+        } else {
+          gState.score += 20;
+          if (gState.isRetake) gState.retakeCorrectCount++;
+          setTimeout(stepToNextQuestion, 600);
+        }
+      } else {
+        tile.classList.add('wrong');
+        AudioPlayer.buzz();
+        if (!gState.isRetake) {
+          if (!gState.missedList.some(m => m.id === gState.activeQ.id)) {
+            gState.missedList.push(gState.activeQ);
+          }
+        }
+        setTimeout(stepToNextQuestion, 1000);
+      }
+    };
+    grid.appendChild(tile);
+  });
+
+  canvas.appendChild(strip);
+  canvas.appendChild(timerBar);
+  canvas.appendChild(grid);
+
+  // 10-second timer
+  let rem = 10000;
+  gState.spotterTimer = setInterval(() => {
+    rem -= 100;
+    const p = Math.max(0, (rem / 10000) * 100);
+    timerFill.style.width = `${p}%`;
+    if (rem <= 0) {
+      clearInterval(gState.spotterTimer);
+      AudioPlayer.buzz();
+      if (!gState.isRetake) {
+        if (!gState.missedList.some(m => m.id === gState.activeQ.id)) {
+          gState.missedList.push(gState.activeQ);
+        }
+      }
+      stepToNextQuestion();
+    }
+  }, 100);
+}
+
+function stepToNextQuestion() {
+  if (gState.isRetake) {
+    gState.retakeIndex++;
+  } else {
+    gState.currentIndex++;
+  }
+  renderActiveQuestion();
+}
+
+/* =========================================================================
+   6. ROUND CONCLUSION & RETAKE MASTERY
+   ========================================================================= */
+function onRoundCompleted() {
+  document.getElementById('hudProgressFill').style.width = '100%';
+
+  if (!gState.isRetake) {
+    if (gState.missedList.length === 0) {
+      unlockClassRoster();
+    } else {
+      document.getElementById('retakeInfoTxt').textContent = 
+        `Progress reached 100%! You missed ${gState.missedList.length} questions. You must ace at least 60% of them to unlock your SJKC NAN HWA Certificate!`;
+      showPane('paneRetake');
+    }
+  } else {
+    const totalMissed = gState.retakeQueue.length;
+    const ratio = gState.retakeCorrectCount / totalMissed;
+
+    if (ratio >= 0.6) {
+      unlockClassRoster();
+    } else {
+      alert(`You scored ${Math.round(ratio * 100)}% on retakes. SJKC NAN HWA requires at least 60% mastery. Let's practice again!`);
+      startRetakeRun();
+    }
+  }
+}
+
+function startRetakeRun() {
+  gState.isRetake = true;
+  gState.retakeQueue = [...gState.missedList].sort(() => Math.random() - 0.5);
+  gState.retakeIndex = 0;
+  gState.retakeCorrectCount = 0;
+  showPane('paneGame');
+  renderActiveQuestion();
+}
+
+function unlockClassRoster() {
+  renderStudentBadges();
+  showPane('paneRoster');
+}
+
+/* =========================================================================
+   7. SJKC NAN HWA CLASS ROSTER & CERTIFICATE
+   ========================================================================= */
+function renderStudentBadges() {
+  const container = document.getElementById('rosterListArea');
+  container.innerHTML = '';
+
+  ROSTER_21.forEach((fullName, idx) => {
+    const btn = document.createElement('div');
+    btn.className = 'student-pill-btn';
+    btn.onclick = () => openCertDiploma(idx + 1, fullName);
+
+    const circle = document.createElement('div');
+    circle.className = 'cand-num-circle';
+    circle.textContent = idx + 1;
+
+    const name = document.createElement('div');
+    name.className = 'cand-name-title';
+    name.textContent = fullName;
+
+    btn.appendChild(circle);
+    btn.appendChild(name);
+    container.appendChild(btn);
+  });
+}
+
+function openCertDiploma(candNo, candName) {
+  document.getElementById('certStudentName').textContent = candName;
+  document.getElementById('certCandNo').textContent = candNo < 10 ? `0${candNo}` : candNo;
+  const d = new Date();
+  document.getElementById('certDateVal').textContent = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  document.getElementById('certModalOverlay').classList.add('active');
+}
+
+function closeCertModal() {
+  document.getElementById('certModalOverlay').classList.remove('active');
+}
+
+async function downloadCertPdf() {
+  const sheet = document.getElementById('certCaptureSheet');
+  const name = document.getElementById('certStudentName').textContent;
+
+  try {
+    const canvas = await html2canvas(sheet, {
+      scale: 2.5,
+      useCORS: true,
+      backgroundColor: '#FFFEFA'
+    });
+
+    const img = canvas.toDataURL('image/png');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    const w = pdf.internal.pageSize.getWidth();
+    const h = pdf.internal.pageSize.getHeight();
+    pdf.addImage(img, 'PNG', 10, 10, w - 20, h - 20);
+    pdf.save(`SJKC_NAN_HWA_Certificate_${name.replace(/\s+/g, '_')}.pdf`);
+  } catch(e) {
+    window.print();
+  }
+}
+
+/* =========================================================================
+   8. TEACHER BYPASS QUICK TEST (Passcode: idme5374@ONG)
+   ========================================================================= */
+function openPasscodePrompt() {
+  document.getElementById('passcodeModal').style.display = 'flex';
+  const inp = document.getElementById('inputPasscode');
+  inp.value = '';
+  inp.focus();
+}
+
+function closePasscodePrompt() {
+  document.getElementById('passcodeModal').style.display = 'none';
+}
+
+function submitPasscode() {
+  const entered = document.getElementById('inputPasscode').value.trim();
+  if (entered === 'idme5374@ONG') {
+    closePasscodePrompt();
+    gState.score = 450;
+    unlockClassRoster();
+  } else {
+    alert('Invalid teacher passcode.');
+  }
+}
+
+// Initial Boot: Preload images immediately
+window.addEventListener('DOMContentLoaded', () => {
+  preloadAllVisuals();
+});
+</script>
+</body>
+</html>
