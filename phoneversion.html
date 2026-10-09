@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>SJKC NAN HWA — Year 4 Ba Ba Dum (Phone Edition)</title>
+
+<!-- High-Clarity Rounded Fonts for Severe Myopia -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Nunito:wght@800;900;1000&display=swap" rel="stylesheet">
+
+<!-- High-Quality PDF Engine -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+  :root {
+    --neon-yellow: #FFE600;
+    --neon-orange: #FF5A00;
+    --neon-pink: #FF007F;
+    --neon-purple: #7928CA;
+    --neon-cyan: #00F0FF;
+    --neon-lime: #00E676;
+    --ink-black: #0F172A;
+    --stroke-chunky: 4px solid #0F172A;
+    --stroke-mega: 6px solid #0F172A;
+    --shadow-chunky: 0 6px 0 #0F172A;
+    --shadow-deep: 0 8px 0 #0F172A;
+    --shadow-pressed: 0 2px 0 #0F172A;
+    --app-font: 'Nunito', 'Comfortaa', system-ui, sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--app-font);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  html, body {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #4F46E5;
+  }
+
+  /* 100% PHONE-NATIVE VIEWPORT */
+  .mobile-app-shell {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(circle at 50% 15%, #FF007F 0%, #4338CA 70%, #1E1B4B 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* COMPACT MOBILE HEADER */
+  .mobile-header {
+    width: 100%;
+    height: 52px;
+    padding: 6px 14px;
+    background: #FFFFFF;
+    border-bottom: var(--stroke-chunky);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    z-index: 100;
+  }
+
+  .school-tag-mobile {
+    font-size: 1.15rem;
+    font-weight: 1000;
+    color: var(--ink-black);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .school-tag-mobile span {
+    background: var(--neon-yellow);
+    border: 2px solid var(--ink-black);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+  }
+
+  .quick-test-btn {
+    background: var(--neon-pink);
+    color: #FFFFFF;
+    border: 3px solid var(--ink-black);
+    box-shadow: 0 3px 0 var(--ink-black);
+    padding: 5px 12px;
+    border-radius: 14px;
+    font-size: 0.85rem;
+    font-weight: 1000;
+    cursor: pointer;
+  }
+  .quick-test-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--ink-black);
+  }
+
+  /* SCREENS CONTAINER */
+  .mobile-screen {
+    flex: 1;
+    width: 100%;
+    height: calc(100dvh - 52px);
+    display: none;
+    flex-direction: column;
+    padding: 10px 12px;
+    overflow: hidden;
+    position: relative;
+  }
+  .mobile-screen.active { display: flex; }
+
+  /* PRELOADER SCREEN */
+  #screenPreloadMobile {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .preload-box-mobile {
+    background: #FFFFFF;
+    border: var(--stroke-mega);
+    box-shadow: var(--shadow-deep);
+    padding: 28px 20px;
+    border-radius: 28px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .phone-spinner {
+    width: 65px;
+    height: 65px;
+    border: 8px solid #FED7AA;
+    border-top: 8px solid var(--neon-orange);
+    border-radius: 50%;
+    animation: spinMobile 0.8s linear infinite;
+  }
+  @keyframes spinMobile { 100% { transform: rotate(360deg); } }
+
+  /* START HERO SCREEN */
+  .start-hero-mobile {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    text-align: center;
+    padding: 10px 4px;
+  }
+
+  .hero-title-mobile {
+    font-size: 2.8rem;
+    font-weight: 1000;
+    color: var(--neon-yellow);
+    text-shadow: 3px 3px 0 #000, 6px 6px 0 var(--neon-pink);
+    line-height: 1.05;
+  }
+
+  .hero-badge-mobile {
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: #FFFFFF;
+    background: rgba(15, 23, 42, 0.85);
+    padding: 8px 18px;
+    border-radius: 20px;
+    border: 3px solid var(--neon-yellow);
+    line-height: 1.3;
+  }
+
+  .btn-start-mobile {
+    background: linear-gradient(135deg, var(--neon-yellow) 0%, var(--neon-orange) 100%);
+    color: var(--ink-black);
+    border: var(--stroke-mega);
+    box-shadow: var(--shadow-deep);
+    padding: 18px 0;
+    width: 100%;
+    border-radius: 30px;
+    font-size: 1.8rem;
+    font-weight: 1000;
+    cursor: pointer;
+  }
+  .btn-start-mobile:active {
+    transform: translateY(6px);
+    box-shadow: var(--shadow-pressed);
+  }
+
+  /* HUD */
+  .mobile-hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    flex-shrink: 0;
+  }
+
+  .mobile-hud-badge {
+    background: #FFFFFF;
+    border: 3px solid var(--ink-black);
+    box-shadow: 0 3px 0 var(--ink-black);
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 1.05rem;
+    font-weight: 1000;
+    color: var(--ink-black);
+  }
+
+  .mobile-mode-pill {
+    background: var(--neon-yellow);
+    border: 3px solid var(--ink-black);
+    box-shadow: 0 3px 0 var(--ink-black);
+    padding: 4px 14px;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    font-weight: 1000;
+    color: var(--ink-black);
+    text-transform: uppercase;
+  }
+
+  .mobile-progress-track {
+    width: 100%;
+    height: 12px;
+    background: #FFFFFF;
+    border: 3px solid var(--ink-black);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+  }
+
+  .mobile-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--neon-yellow), var(--neon-lime));
+    transition: width 0.3s ease;
+  }
+
+  /* =========================================================================
+     MAXIMUM VISUAL PHONE PLAYGROUND (Edge-to-Edge Optimization)
+     ========================================================================= */
+  .mobile-play-stage {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  /* COMPACT WORD / AUDIO STRIP */
+  .prompt-strip-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-shrink: 0;
+    width: 100%;
+  }
+
+  .prompt-text-mobile {
+    font-size: clamp(1.6rem, 5vw, 2.3rem);
+    font-weight: 1000;
+    color: #FFFFFF;
+    text-shadow: 3px 3px 0 var(--ink-black);
+    line-height: 1.1;
+    text-align: center;
+  }
+
+  .tts-btn-mobile {
+    background: var(--neon-cyan);
+    border: 3px solid var(--ink-black);
+    box-shadow: 0 3px 0 var(--ink-black);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .tts-btn-mobile:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--ink-black);
+  }
+
+  /* 1. WORD TO 4 PICS (Fills 70%+ of mobile screen height) */
+  .grid-4-pics-phone {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .card-pic-phone {
+    background: #FFFFFF;
+    border: var(--stroke-chunky);
+    box-shadow: var(--shadow-chunky);
+    border-radius: 18px;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 5px;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+  }
+  .card-pic-phone:active {
+    transform: translateY(4px);
+    box-shadow: var(--shadow-pressed);
+  }
+  .card-pic-phone img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+  }
+
+  /* 2. PIC TO 4 WORDS (Hero photo fills top half, buttons in thumb zone) */
+  .hero-photo-phone {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    background: #FFFFFF;
+    border: var(--stroke-chunky);
+    box-shadow: var(--shadow-chunky);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+  }
+  .hero-photo-phone img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .grid-4-words-phone {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .card-word-phone {
+    background: #FFFFFF;
+    border: var(--stroke-chunky);
+    box-shadow: var(--shadow-chunky);
+    border-radius: 18px;
+    padding: 12px 6px;
+    font-size: clamp(1.2rem, 3.8vw, 1.6rem);
+    font-weight: 1000;
+    color: var(--ink-black);
+    cursor: pointer;
+    text-align: center;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-word-phone:active {
+    transform: translateY(4px);
+    box-shadow: var(--shadow-pressed);
+  }
+
+  /* CORRECT / WRONG FEEDBACK */
+  .card-pic-phone.correct, .card-word-phone.correct, .spotter-tile-phone.correct {
+    background: var(--neon-lime) !important;
+    border-color: #047857 !important;
+    color: #FFFFFF !important;
+  }
+  .card-pic-phone.wrong, .card-word-phone.wrong, .spotter-tile-phone.wrong {
+    background: var(--neon-pink) !important;
+    border-color: #9F1239 !important;
+    color: #FFFFFF !important;
+    animation: mobileShake 0.3s;
+  }
+  @keyframes mobileShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+
+  /* 3. SENTENCE BUILDER PHONE */
+  .sentence-drop-phone {
+    min-height: 80px;
+    width: 100%;
+    background: #FFFFFF;
+    border: 4px dashed var(--ink-black);
+    box-shadow: var(--shadow-chunky);
+    border-radius: 20px;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .sentence-bank-phone {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    width: 100%;
+    margin-top: auto;
+    padding-bottom: 6px;
+  }
+
+  .token-phone {
+    background: var(--neon-yellow);
+    border: 3px solid var(--ink-black);
+    box-shadow: 0 4px 0 var(--ink-black);
+    color: var(--ink-black);
+    font-size: clamp(1.2rem, 3.8vw, 1.5rem);
+    font-weight: 1000;
+    padding: 10px 18px;
+    border-radius: 16px;
+    cursor: pointer;
+  }
+  .token-phone:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--ink-black);
+  }
+  .token-phone.placed {
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  /* 4. 9-PANEL SPOTTING PHONE */
+  .spotter-timer-phone {
+    width: 100%;
+    height: 12px;
+    background: #FFFFFF;
+    border: 3px solid var(--ink-black);
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .spotter-timer-stream {
+    height: 100%;
+    width: 100%;
+    background: var(--neon-pink);
+    transition: width 0.1s linear;
+  }
+
+  .grid-9-phone {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .spotter-tile-phone {
+    background: #FFFFFF;
+    border: var(--stroke-chunky);
+    box-shadow: 0 4px 0 var(--ink-black);
+    border-radius: 16px;
+    padding: 4px;
+    font-size: clamp(1rem, 2.9vw, 1.35rem);
+    font-weight: 1000;
+    color: var(--ink-black);
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    word-break: break-word;
+  }
+  .spotter-tile-phone:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--ink-black);
+  }
+
+  /* RETAKE OVERVIEW */
+  .dialog-card-mobile {
+    background: var(--neon-yellow);
+    border: var(--stroke-mega);
+    box-shadow: var(--shadow-deep);
+    padding: 24px 16px;
+    border-radius: 26px;
+    text-align: center;
+    width: 100%;
+  }
+
+  /* CLASS ROSTER ON MOBILE (21 STUDENTS) */
+  .roster-list-phone {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    height: calc(100dvh - 150px);
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .student-card-phone {
+    background: #FFFFFF;
+    border: var(--stroke-chunky);
+    box-shadow: 0 4px 0 var(--ink-black);
+    border-radius: 18px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+  }
+  .student-card-phone:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--ink-black);
+  }
+
+  .cand-badge-phone {
+    width: 38px;
+    height: 38px;
+    background: var(--neon-yellow);
+    border: 3px solid var(--ink-black);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    font-weight: 1000;
+    flex-shrink: 0;
+  }
+
+  .cand-name-phone {
+    font-size: 1.15rem;
+    font-weight: 1000;
+    color: var(--ink-black);
+    line-height: 1.2;
+  }
+
+  /* CERTIFICATE MODAL ON PHONE */
+  #certModalMobile {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(8px);
+    z-index: 5000;
+    overflow-y: auto;
+    padding: 12px;
+    align-items: center;
+    justify-content: center;
+  }
+  #certModalMobile.active { display: flex; }
+
+  .cert-phone-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cert-paper-phone {
+    background: #FFFEFA;
+    border: 10px solid #1E3A8A;
+    outline: 4px solid var(--neon-yellow);
+    outline-offset: -8px;
+    padding: 20px 14px;
+    text-align: center;
+    border-radius: 6px;
+    width: 100%;
+  }
+
+  /* PASSCODE MODAL */
+  #passModalMobile {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
+    background: rgba(0,0,0,0.8);
+    z-index: 6000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .pass-box-phone {
+    background: #FFFFFF;
+    border: var(--stroke-mega);
+    box-shadow: var(--shadow-deep);
+    padding: 24px 18px;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 340px;
+    text-align: center;
+  }
+  .pass-box-phone input {
+    width: 100%;
+    padding: 10px;
+    margin: 14px 0;
+    border: 3px solid var(--ink-black);
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="mobile-app-shell">
+  <!-- Mobile Status Header -->
+  <header class="mobile-header">
+    <div class="school-tag-mobile">
+      SJKC NAN HWA <span>Y4</span>
+    </div>
+    <button class="quick-test-btn" onclick="openPassPrompt()">⚡ Quick Test</button>
+  </header>
+
+  <!-- SCREEN 0: PRELOADER -->
+  <section class="mobile-screen active" id="screenPreloadMobile">
+    <div class="preload-box-mobile">
+      <div class="phone-spinner"></div>
+      <h2 style="font-size:1.6rem; font-weight:1000; color:var(--ink-black);">Loading Visuals...</h2>
+      <p id="txtPreloadCounter" style="font-size:1.15rem; font-weight:900; color:#64748B;">Loaded: 0 / 43</p>
+    </div>
+  </section>
+
+  <!-- SCREEN 1: START SCREEN -->
+  <section class="mobile-screen" id="screenStartMobile">
+    <div class="start-hero-mobile">
+      <h1 class="hero-title-mobile">ENGLISH ARCADE</h1>
+      <div class="hero-badge-mobile">
+        SJKC NAN HWA<br>Get Smart Plus 4 (Modules 1 - 10)
+      </div>
+
+      <div style="background:#FFF; border:var(--stroke-chunky); box-shadow:var(--shadow-chunky); border-radius:20px; padding:16px; width:100%; text-align:left;">
+        <div style="font-size:1.15rem; font-weight:1000; color:var(--ink-black); margin-bottom:6px;">Arcade Mission:</div>
+        <ul style="font-size:0.95rem; font-weight:800; color:#475569; padding-left:20px; line-height:1.5;">
+          <li>45 Rapid-fire challenges.</li>
+          <li>Turn up your phone volume 🔊</li>
+          <li>Must score ≥ 60% on retakes.</li>
+          <li>Tap your candidate number to get your certificate!</li>
+        </ul>
+      </div>
+
+      <button class="btn-start-mobile" onclick="startMobileGame()">TAP TO PLAY ➔</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 2: GAMEPLAY (MAX PHONE DIMENSIONS) -->
+  <section class="mobile-screen" id="screenGameMobile">
+    <div class="mobile-hud">
+      <div class="mobile-hud-badge" id="hudQNo">Q: 1 / 45</div>
+      <div class="mobile-mode-pill" id="hudModeTag">PICTURE MATCH</div>
+      <div class="mobile-hud-badge" id="hudScoreBadge" style="color:#059669;">Score: 0</div>
+    </div>
+
+    <div class="mobile-progress-track">
+      <div class="mobile-progress-fill" id="hudProgressFill"></div>
+    </div>
+
+    <div class="mobile-play-stage" id="mobileCanvas">
+      <!-- Injected per question type -->
+    </div>
+  </section>
+
+  <!-- SCREEN 3: RETAKE MISTAKES -->
+  <section class="mobile-screen" id="screenRetakeMobile">
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;">
+      <div class="dialog-card-mobile">
+        <h2 style="font-size:2rem; font-weight:1000; color:var(--ink-black); margin-bottom:8px;">⚠️ RETAKE ROUND</h2>
+        <p style="font-size:1.15rem; font-weight:900; color:#7C2D12;" id="retakeDesc">
+          Progress hit 100%! Retake your missed questions to unlock your SJKC NAN HWA certificate (Must get ≥ 60%).
+        </p>
+      </div>
+      <button class="btn-start-mobile" onclick="runRetakes()">START RETAKE RUN ➔</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 4: CLASS ROSTER (21 STUDENTS) -->
+  <section class="mobile-screen" id="screenRosterMobile">
+    <div style="text-align:center; margin-bottom:8px; flex-shrink:0;">
+      <h2 style="font-size:2rem; font-weight:1000; color:var(--neon-yellow); text-shadow:2px 2px 0 #000;">
+        MASTERY ACHIEVED! 🏆
+      </h2>
+      <p style="font-size:1rem; font-weight:900; color:#FFFFFF;">
+        Tap your assigned name to view & save your certificate:
+      </p>
+    </div>
+
+    <div class="roster-list-phone" id="rosterListPhone">
+      <!-- 21 Students injected here -->
+    </div>
+  </section>
+</div>
+
+<!-- SJKC NAN HWA DIPLOMA CERTIFICATE (MOBILE VIEW & A4 EXPORT) -->
+<div id="certModalMobile">
+  <div class="cert-phone-wrapper">
+    <div class="cert-paper-phone" id="certSheetPhone">
+      <div style="font-size:1.5rem; font-weight:1000; color:#1E3A8A;">SJK (C) NAN HWA</div>
+      <div style="font-size:1.15rem; font-weight:900; color:#B45309; letter-spacing:2px; margin-top:1px;">南华国民型华文小学</div>
+      <div style="font-size:0.75rem; font-weight:900; letter-spacing:1px; color:#475569; margin-top:4px; border-bottom:2px solid #CBD5E1; display:inline-block; padding-bottom:2px; text-transform:uppercase;">
+        English Panel • Year 4 Arcade Assessment
+      </div>
+
+      <div style="font-size:1.25rem; font-weight:1000; color:#B45309; margin: 10px 0 2px 0;">
+        CERTIFICATE OF ACHIEVEMENT
+      </div>
+
+      <p style="font-size:0.9rem; font-style:italic; color:#64748B;">This is to certify that</p>
+      
+      <div style="font-size:1.6rem; font-weight:1000; color:#0F172A; border-bottom:3px solid #0F172A; display:inline-block; padding:2px 24px; margin:6px auto;" id="certStudentName">
+        STUDENT NAME
+      </div>
+
+      <p style="font-size:0.85rem; font-weight:800; color:#334155; line-height:1.4; margin:8px auto;">
+        has mastered the <strong>Get Smart Plus 4 Arcade Assessment</strong>, demonstrating verified competence in Vocabulary, Listening, Spelling, and Syntax across Modules 1 to 10.
+      </p>
+
+      <div style="display:flex; justify-content:center; gap:16px; font-size:0.8rem; font-weight:1000; color:#1E3A8A; margin: 8px 0;">
+        <div>No: <span id="certCandNo" style="color:#EA580C;">01</span></div>
+        <div>Result: <span style="color:#059669;">100% MASTERY</span></div>
+        <div>Date: <span id="certDateVal">09 Oct 2026</span></div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:16px; padding:0 6px;">
+        <div style="text-align:center; font-size:0.75rem; font-weight:900; color:#334155;">
+          <div style="width:90px; border-bottom:2px solid #0F172A; margin-bottom:4px;"></div>
+          English Panel<br>SJKC NAN HWA
+        </div>
+
+        <div style="width:58px; height:58px; border-radius:50%; border:3px double #D97706; background:#FEF3C7; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:1000; font-size:0.55rem; color:#92400E;">
+          <span>SJKC</span>
+          <span style="font-size:0.65rem;">NAN HWA</span>
+          <span>OFFICIAL</span>
+        </div>
+
+        <div style="text-align:center; font-size:0.75rem; font-weight:900; color:#334155;">
+          <div style="width:90px; border-bottom:2px solid #0F172A; margin-bottom:4px;"></div>
+          Headmaster<br>SJKC NAN HWA
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:10px;">
+      <button class="btn-start-mobile" style="flex:1; padding:12px 0; font-size:1.15rem; background:#FFF;" onclick="closeCert()">Back</button>
+      <button class="btn-start-mobile" style="flex:2; padding:12px 0; font-size:1.15rem; background:var(--neon-cyan);" onclick="downloadPdf()">📥 Save PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- PASSCODE MODAL -->
+<div id="passModalMobile">
+  <div class="pass-box-phone">
+    <h3 style="font-size:1.4rem; font-weight:1000; color:var(--ink-black);">Teacher Bypass</h3>
+    <p style="font-size:0.85rem; font-weight:800; color:#64748B; margin-top:4px;">Enter passcode to generate certificates immediately:</p>
+    <input type="password" id="inputPasscode" placeholder="Passcode">
+    <div style="display:flex; gap:8px;">
+      <button class="btn-start-mobile" style="flex:1; padding:10px 0; font-size:1rem; background:#FFF;" onclick="closePassPrompt()">Cancel</button>
+      <button class="btn-start-mobile" style="flex:1; padding:10px 0; font-size:1rem; background:var(--neon-lime); color:#FFF;" onclick="verifyPass()">Unlock</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   1. STUDENT ROSTER (21 STUDENTS) - SJKC NAN HWA
+   ========================================================================= */
+const ROSTER_21 = [
+  "BOK KHAI HAO",
+  "CHAN JIE YU",
+  "CHOO MING EN",
+  "GAN RUI YIING",
+  "GAN YU ZHE",
+  "GOH JUN HEN",
+  "JAYDEN SIM JIA HAO",
+  "JOLIN TOW SHI MIN",
+  "KOO EN ZE",
+  "LE THI KIEU NHI",
+  "LEE SHI JUN",
+  "LIM JIA HAO",
+  "LIM YOU JIE",
+  "MASON LOH MING XUAN",
+  "NG EN HAO",
+  "NG MIN YUE",
+  "TAN YEN SEE",
+  "TOH PIN JOE",
+  "TOW HAO REN",
+  "YEO JOEY",
+  "ZITLE ONG"
+];
+
+/* =========================================================================
+   2. 43 EXACT USER-PROVIDED ASSETS
+   ========================================================================= */
+const ASSETS_MAP = {
+  "pyramid": "https://i.postimg.cc/659S7wvj/Ancient-Egyptian-stone-pyramid.webp",
+  "badminton": "https://i.postimg.cc/MKdLV40q/badminton.webp",
+  "bag of crisps": "https://i.postimg.cc/GhcNBrD1/bag-of-crisps.jpg",
+  "bar of chocolate": "https://i.postimg.cc/rF8bdc4k/bar-of-chocolate.jpg",
+  "zebra crossing": "https://i.postimg.cc/sfPqD1vW/Black-and-white-pedestrian-road-crossing.jpg",
+  "can of lemonade": "https://i.postimg.cc/NfgVyYXt/can-of-lemonade.jpg",
+  "carton of milk": "https://i.postimg.cc/KvZVKFTZ/carton-of-milk.png",
+  "treasure": "https://i.postimg.cc/WpmCbthW/Chest-with-gold-relics-and-coins.jpg",
+  "cricket": "https://i.postimg.cc/bJkMnwLh/cricket.webp",
+  "helmet": "https://i.postimg.cc/bNzMG8tT/Cycling-safety-helmet.avif",
+  "mummy": "https://i.postimg.cc/ncH5sZDT/Egyptian-mummy-wrapped-in-linen.webp",
+  "feed the fish": "https://i.postimg.cc/tCXf1y6q/feed-the-fish.jpg",
+  "gondola": "https://i.postimg.cc/YqpV4kWs/gondola.jpg",
+  "gorilla": "https://i.postimg.cc/V6nTtk46/gorilla.jpg",
+  "high jump": "https://i.postimg.cc/B6HyFnNJ/high-jump.webp",
+  "ice hockey": "https://i.postimg.cc/NMmVXjbq/ice-hockey.jpg",
+  "javelin": "https://i.postimg.cc/wvLPNjFj/javelin.jpg",
+  "jellyfish": "https://i.postimg.cc/gjp7HbBD/jellyfish.webp",
+  "kneepad": "https://i.postimg.cc/3Rm6Gx1f/kneepad.avif",
+  "ostrich": "https://i.postimg.cc/TwgSb3QY/ostrich.jpg",
+  "pavement": "https://i.postimg.cc/kMNzXDBK/Pedestrian-walkway-sidewalk.webp",
+  "cough": "https://i.postimg.cc/ncH5sZDw/Person-coughing.jpg",
+  "stomach ache": "https://i.postimg.cc/3NZcLfPf/Person-holding-hurting-abdomen.webp",
+  "toothache": "https://i.postimg.cc/595TNj6H/Person-holding-painful-cheek-jaw.jpg",
+  "headache": "https://i.postimg.cc/RhTDPpjs/Person-pressing-forehead-in-pain.jpg",
+  "tomb": "https://i.postimg.cc/mZ3J2hty/Pharaoh-burial-chamber-sarcophagus.jpg",
+  "plaster": "https://i.postimg.cc/mk4nyW6N/plaster.jpg",
+  "rake leaves": "https://i.postimg.cc/X7QPdhKv/rake-leaves.jpg",
+  "recycling": "https://i.postimg.cc/L5SW3F08/recycling.webp",
+  "rhino": "https://i.postimg.cc/D0hNP3Y7/rhino.webp",
+  "set the table": "https://i.postimg.cc/jds9WKfq/set-the-table.jpg",
+  "shovel snow": "https://i.postimg.cc/KvJWBV7z/shovel-snow.jpg",
+  "fever": "https://i.postimg.cc/7hNWBtpF/Sick-child-with-thermometer-forehead-cloth.png",
+  "sleeping bag": "https://i.postimg.cc/L5SW3F0X/sleeping-bag.webp",
+  "snail": "https://i.postimg.cc/qRyYKvQq/snail.jpg",
+  "snowmobile": "https://i.postimg.cc/159TgPqT/snowmobile.jpg",
+  "squirrel": "https://i.postimg.cc/1XSdr1Y9/squirrel.jpg",
+  "sunscreen": "https://i.postimg.cc/L5SW3F0g/sunscreen.jpg",
+  "take out the rubbish": "https://i.postimg.cc/pX279xjL/take-out-the-rubbish.webp",
+  "tent": "https://i.postimg.cc/nrxWGfwX/tent.avif",
+  "torch": "https://i.postimg.cc/902kYHNr/torch.jpg",
+  "tuk-tuk": "https://i.postimg.cc/rF8bdcr7/tuk-tuk.jpg",
+  "seat belt": "https://i.postimg.cc/nVKgcMCr/Vehicle-safety-belt-buckled.jpg"
+};
+
+/* =========================================================================
+   3. MOBILE AUDIO SYNTHESIS & UK TTS
+   ========================================================================= */
+const PhoneAudio = {
+  ctx: null,
+  init() {
+    if (!this.ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      this.ctx = new AC();
+    }
+  },
+  chirp(freq, type, dur) {
+    try {
+      this.init();
+      const osc = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      g.gain.setValueAtTime(0.25, this.ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + dur);
+      osc.connect(g);
+      g.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + dur);
+    } catch(e) {}
+  },
+  ding() {
+    this.chirp(587.33, 'triangle', 0.12);
+    setTimeout(() => this.chirp(880, 'triangle', 0.2), 90);
+  },
+  buzz() {
+    this.chirp(150, 'sawtooth', 0.35);
+  }
+};
+
+function speakShortUK(text) {
+  const shortText = text.trim();
+  const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en-GB&q=${encodeURIComponent(shortText)}`;
+  const audio = new Audio();
+  audio.src = url;
+  audio.play().catch(() => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(shortText);
+      utter.lang = 'en-GB';
+      utter.rate = 0.92;
+      window.speechSynthesis.speak(utter);
+    }
+  });
+}
+
+/* =========================================================================
+   4. 45 CURRICULUM QUESTIONS (Modules 1 - 10)
+   ========================================================================= */
+const QUESTIONS = [
+  // 1-12: Word to 4 Pictures (Max Dimensions)
+  { id: 1, type: "word_to_4_pics", target: "ice hockey", choices: ["ice hockey", "cricket", "badminton", "high jump"] },
+  { id: 2, type: "word_to_4_pics", target: "feed the fish", choices: ["feed the fish", "rake leaves", "shovel snow", "set the table"] },
+  { id: 3, type: "word_to_4_pics", target: "bag of crisps", choices: ["bag of crisps", "carton of milk", "bar of chocolate", "can of lemonade"] },
+  { id: 4, type: "word_to_4_pics", target: "high jump", choices: ["high jump", "javelin", "ice hockey", "badminton"] },
+  { id: 5, type: "word_to_4_pics", target: "zebra crossing", choices: ["zebra crossing", "pavement", "helmet", "seat belt"] },
+  { id: 6, type: "word_to_4_pics", target: "sleeping bag", choices: ["sleeping bag", "tent", "torch", "squirrel"] },
+  { id: 7, type: "word_to_4_pics", target: "set the table", choices: ["set the table", "take out the rubbish", "feed the fish", "rake leaves"] },
+  { id: 8, type: "word_to_4_pics", target: "shovel snow", choices: ["shovel snow", "rake leaves", "feed the fish", "set the table"] },
+  { id: 9, type: "word_to_4_pics", target: "take out the rubbish", choices: ["take out the rubbish", "recycling", "set the table", "sleeping bag"] },
+  { id: 10, type: "word_to_4_pics", target: "tuk-tuk", choices: ["tuk-tuk", "gondola", "snowmobile", "helmet"] },
+  { id: 11, type: "word_to_4_pics", target: "can of lemonade", choices: ["can of lemonade", "carton of milk", "bar of chocolate", "bag of crisps"] },
+  { id: 12, type: "word_to_4_pics", target: "bar of chocolate", choices: ["bar of chocolate", "bag of crisps", "can of lemonade", "carton of milk"] },
+
+  // 13-22: Picture to 4 Words (Hero Photo Max Size)
+  { id: 13, type: "pic_to_4_words", target: "pyramid", imageKey: "pyramid", choices: ["pyramid", "tomb", "treasure", "mummy"] },
+  { id: 14, type: "pic_to_4_words", target: "mummy", imageKey: "mummy", choices: ["mummy", "pyramid", "tomb", "gorilla"] },
+  { id: 15, type: "pic_to_4_words", target: "helmet", imageKey: "helmet", choices: ["helmet", "seat belt", "kneepad", "pavement"] },
+  { id: 16, type: "pic_to_4_words", target: "toothache", imageKey: "toothache", choices: ["toothache", "headache", "stomach ache", "cough"] },
+  { id: 17, type: "pic_to_4_words", target: "stomach ache", imageKey: "stomach ache", choices: ["stomach ache", "fever", "toothache", "plaster"] },
+  { id: 18, type: "pic_to_4_words", target: "headache", imageKey: "headache", choices: ["headache", "toothache", "fever", "cough"] },
+  { id: 19, type: "pic_to_4_words", target: "fever", imageKey: "fever", choices: ["fever", "cough", "headache", "stomach ache"] },
+  { id: 20, type: "pic_to_4_words", target: "plaster", imageKey: "plaster", choices: ["plaster", "sunscreen", "sleeping bag", "torch"] },
+  { id: 21, type: "pic_to_4_words", target: "jellyfish", imageKey: "jellyfish", choices: ["jellyfish", "snail", "ostrich", "squirrel"] },
+  { id: 22, type: "pic_to_4_words", target: "sunscreen", imageKey: "sunscreen", choices: ["sunscreen", "plaster", "can of lemonade", "torch"] },
+
+  // 23-32: Sentence Block Rearrangements
+  { id: 23, type: "sentence_rearrange", target: "Always fasten your seat belt.", blocks: ["Always", "fasten", "your", "seat", "belt."] },
+  { id: 24, type: "sentence_rearrange", target: "The Egyptians washed the body first.", blocks: ["The", "Egyptians", "washed", "the", "body", "first."] },
+  { id: 25, type: "sentence_rearrange", target: "She is going to dress up as a soldier.", blocks: ["She", "is", "going", "to", "dress", "up", "as", "a", "soldier."] },
+  { id: 26, type: "sentence_rearrange", target: "Elephants are bigger than rhinos.", blocks: ["Elephants", "are", "bigger", "than", "rhinos."] },
+  { id: 27, type: "sentence_rearrange", target: "How often do you have PE?", blocks: ["How", "often", "do", "you", "have", "PE?"] },
+  { id: 28, type: "sentence_rearrange", target: "He doesn't have to shovel snow.", blocks: ["He", "doesn't", "have", "to", "shovel", "snow."] },
+  { id: 29, type: "sentence_rearrange", target: "You should take some medicine.", blocks: ["You", "should", "take", "some", "medicine."] },
+  { id: 30, type: "sentence_rearrange", target: "Don't stick your head out of the window.", blocks: ["Don't", "stick", "your", "head", "out", "of", "the", "window."] },
+  { id: 31, type: "sentence_rearrange", target: "I always skate before dinner.", blocks: ["I", "always", "skate", "before", "dinner."] },
+  { id: 32, type: "sentence_rearrange", target: "She is the best high jumper in our school.", blocks: ["She", "is", "the", "best", "high", "jumper", "in", "our", "school."] },
+
+  // 33-38: 9-Panel Rapid Spelling Spotter (Long Words, 4 Rounds)
+  {
+    id: 33, type: "nine_panel_spotter", word: "INDEPENDENCE",
+    rounds: [
+      { correct: "INDEPENDENCE", panels: ["INDEPENDENCE", "INDEPENDANCE", "INDEPENDENSE", "INDEPANDENCE", "INDIPENDENCE", "INDEPANDENSE", "INDAPENDENCE", "INDIPENDENSE", "INDEPEDENCE"] },
+      { correct: "INDEPENDENCE", panels: ["INDEPENEDENCE", "INDEPENDENCE", "INDEPENCE", "INDEPENDENS", "INDEEPNDENCE", "INDEPENDACNE", "INDEPENNDENCE", "INDEPEDANCE", "INDEPENDINCE"] },
+      { correct: "INDEPENDENCE", panels: ["INDIPENDANCE", "INDAPENDANCE", "INDEPENDENCE", "INDEPANDANCE", "INDEPENDANS", "INDAPENDENSE", "INDEPANDANC", "INDEPDANCE", "INDIPANDENCE"] },
+      { correct: "INDEPENDENCE", panels: ["INDEPENDENC", "INDEPENDENS", "INDEPENENCE", "INDEPENDANCEE", "INDEPENDENCE", "INDEPPENDENCE", "INDEPNDENCE", "INDEPENNDANCE", "INDIPENDACNE"] }
+    ]
+  },
+  {
+    id: 34, type: "nine_panel_spotter", word: "TYRANNOSAURUS",
+    rounds: [
+      { correct: "TYRANNOSAURUS", panels: ["TYRANNOSAURUS", "TYRANOSAURUS", "TYRANNOSORUS", "TIRANNOSAURUS", "TYRANNOSAURAS", "TYRANOSAURAS", "TIRANOSAURUS", "TYRANNASORUS", "TYRANNASURUS"] },
+      { correct: "TYRANNOSAURUS", panels: ["TYRANNOSAURUS", "TYRANOSORUS", "TYRANNASORAS", "TYRANNOSAURUS", "TYRANOSAURUS", "TYRANNOSORES", "TYRANNOSAUROS", "TYRONNOSAURUS", "TYRANNOZAURUS"] },
+      { correct: "TYRANNOSAURUS", panels: ["TIRANNOSAURAS", "TYRANNOSAURUS", "TYRANNOZORUS", "TYRANNOSOARUS", "TIRANOSAURAS", "TYRANNUSORUS", "TYRANNUSAURUS", "TYRANNISAURUS", "TYRANNASOURUS"] },
+      { correct: "TYRANNOSAURUS", panels: ["TYRANNOSAURUS", "TYRANNOSORIS", "TYRANOSAURUS", "TYRANNOSURUS", "TYRANOZORUS", "TYRANNOSAURUSS", "TIRANNASORUS", "TYRANOSAUROS", "TYRANNOSAURAZ"] }
+    ]
+  },
+  {
+    id: 35, type: "nine_panel_spotter", word: "TUTANKHAMUN",
+    rounds: [
+      { correct: "TUTANKHAMUN", panels: ["TUTANKHAMUN", "TUTANKHAMON", "TUTENKHAMUN", "TUTANKAMUN", "TUTANKHAMEN", "TUTANKAMON", "TOOTANKHAMUN", "TUTENKHAMON", "TUTANKHAAMUN"] },
+      { correct: "TUTANKHAMUN", panels: ["TUTENKAMUN", "TUTANKHAMUN", "TUTANKHOMUN", "TUTANKHAMIN", "TUTANKHAUM", "TUTENKHAMEN", "TUTAKHAMUN", "TUTHANKHAMUN", "TUTANKHUMUN"] },
+      { correct: "TUTANKHAMUN", panels: ["TUTANKHAMON", "TUTANKHAMUN", "TUTANKAMEN", "TUTANHAMUN", "TUTTENKHAMUN", "TUTENKHAMIN", "TOOTENKHAMUN", "TUTANKHANUN", "TUTANKHMUN"] },
+      { correct: "TUTANKHAMUN", panels: ["TUTANKAMUN", "TUTENKAMON", "TUTANKHAMUN", "TUTANKAAMUN", "TUTANKHAMEN", "TUTANKHOMON", "TUTANKHAUM", "TUTENKHAMUN", "TUTHANKAMUN"] }
+    ]
+  },
+  {
+    id: 36, type: "nine_panel_spotter", word: "COMFORTABLE",
+    rounds: [
+      { correct: "COMFORTABLE", panels: ["COMFORTABLE", "COMFORTIBLE", "COMFURTABLE", "COMFTORABLE", "COMFORTABUL", "CONFORTABLE", "COMFORTABAL", "COMFORTUBLE", "COMFRATABLE"] },
+      { correct: "COMFORTABLE", panels: ["COMFORTABLE", "COMFARTABLE", "COMFORTABEL", "CONVERTIBLE", "COMFORTUBLE", "COMFORTIBAL", "COMFURTIBLE", "COMFTRABLE", "COMFORTERBLE"] },
+      { correct: "COMFORTABLE", panels: ["COMFTABLE", "COMFORTABLE", "COMFORTABLEE", "CONFORTIBLE", "COMFURTABEL", "COMFURTABLE", "COMFORTABELL", "COMFORTABILE", "COMFORTUBEL"] },
+      { correct: "COMFORTABLE", panels: ["COMFORTABUL", "COMFURTABLE", "COMFORTABLE", "COMFATABLE", "COMFURTABAL", "CONFURTABLE", "COMFORTIBLE", "COMFARTOBLE", "COMFORTEBLE"] }
+    ]
+  },
+  {
+    id: 37, type: "nine_panel_spotter", word: "CHAMPIONSHIP",
+    rounds: [
+      { correct: "CHAMPIONSHIP", panels: ["CHAMPIONSHIP", "CHAMPIONSHP", "CHAMPYONSHIP", "CHAMPEONSHIP", "CHAMPIONCHIP", "CHAMPIONSHIPPE", "CHAMPONSHIP", "CHAMPIANSHIP", "CHAMPIONSHIPP"] },
+      { correct: "CHAMPIONSHIP", panels: ["CHAMPIONSHIP", "CHAMPONSHIP", "CHAMPIENSHIP", "CHAMPIONSHIP", "CHAMPYONSHP", "CHAMPINSHIP", "CHAMPIONCHEAP", "CHAMPIONSHYP", "CHAMPIONNSHIP"] },
+      { correct: "CHAMPIONSHIP", panels: ["CHAMPEANSHIP", "CHAMPIONSHIP", "CHAMPIONTSHIP", "CHAMPYONCHIP", "CHAMPIONSHEP", "CHAMPIUNSHIP", "CHAMPIONSHUP", "CHAMPONSHIPP", "CHAMPIONSHIPY"] },
+      { correct: "CHAMPIONSHIP", panels: ["CHAMPONSHIP", "CHAMPIONCHIP", "CHAMPIONSHIP", "CHAMPYONSHIP", "CHAMPEONCHIP", "CHAMPIENSHIPP", "CHAMPIONSIHP", "CHAMPEONSHP", "CHAMPIONSIP"] }
+    ]
+  },
+  {
+    id: 38, type: "nine_panel_spotter", word: "UTAHRAPTOR",
+    rounds: [
+      { correct: "UTAHRAPTOR", panels: ["UTAHRAPTOR", "UTARAPTOR", "UTAHROPTOR", "UTAHAPTER", "UTAHREPTOR", "UTAHRAPTER", "UTAHROPTUR", "UTAHROPTAR", "UTTARAPTOR"] },
+      { correct: "UTAHRAPTOR", panels: ["UTARAPTER", "UTAHRAPTOR", "UTAHROPTER", "UTAHREPTUR", "UTHAHRAPTOR", "UTAHRPATOR", "UTAHRAUPTOR", "UTAHREPTAR", "UTAROPTER"] },
+      { correct: "UTAHRAPTOR", panels: ["UTAHROPTER", "UTARAPTOR", "UTAHRAPTOR", "UTAHRAPTUR", "UTAHROPTIR", "UTAHRAPTORE", "UTAHROPTERR", "UTTARAPTER", "UTAHREPTR"] },
+      { correct: "UTAHRAPTOR", panels: ["UTAHROPTOR", "UTAHREPTOR", "UTAHRAPTOR", "UTAHAPTER", "UTAHRAAPTOR", "UTARAPTER", "UTAHREPTUR", "UTAHROPTAR", "UTAHRPTER"] }
+    ]
+  },
+
+  // 39-45: Multi-Word Picture Recognition
+  { id: 39, type: "pic_to_4_words", target: "carton of milk", imageKey: "carton of milk", choices: ["carton of milk", "can of lemonade", "bar of chocolate", "bag of crisps"] },
+  { id: 40, type: "pic_to_4_words", target: "rake leaves", imageKey: "rake leaves", choices: ["rake leaves", "shovel snow", "feed the fish", "set the table"] },
+  { id: 41, type: "pic_to_4_words", target: "gondola", imageKey: "gondola", choices: ["gondola", "tuk-tuk", "snowmobile", "javelin"] },
+  { id: 42, type: "pic_to_4_words", target: "snowmobile", imageKey: "snowmobile", choices: ["snowmobile", "gondola", "tuk-tuk", "sleeping bag"] },
+  { id: 43, type: "pic_to_4_words", target: "javelin", imageKey: "javelin", choices: ["javelin", "high jump", "cricket", "badminton"] },
+  { id: 44, type: "pic_to_4_words", target: "badminton", imageKey: "badminton", choices: ["badminton", "ice hockey", "high jump", "cricket"] },
+  { id: 45, type: "pic_to_4_words", target: "cricket", imageKey: "cricket", choices: ["cricket", "ice hockey", "badminton", "javelin"] }
+];
+
+/* =========================================================================
+   5. MOBILE GAME STATE & PRELOAD ENGINE
+   ========================================================================= */
+const mState = {
+  queue: [],
+  currentIndex: 0,
+  score: 0,
+  missedList: [],
+  isRetake: false,
+  retakeQueue: [],
+  retakeIndex: 0,
+  retakeCorrectCount: 0,
+  activeQ: null,
+  placedTokens: [],
+  spotterRound: 0,
+  spotterTimer: null
+};
+
+function preloadMobileVisuals() {
+  const keys = Object.keys(ASSETS_MAP);
+  let loaded = 0;
+  const total = keys.length;
+  const counter = document.getElementById('txtPreloadCounter');
+
+  const onComplete = () => {
+    setTimeout(() => {
+      showScreen('screenStartMobile');
+    }, 300);
+  };
+
+  keys.forEach(k => {
+    const img = new Image();
+    img.src = ASSETS_MAP[k];
+    img.onload = () => {
+      loaded++;
+      counter.textContent = `Loaded: ${loaded} / ${total}`;
+      if (loaded >= total) onComplete();
+    };
+    img.onerror = () => {
+      loaded++;
+      counter.textContent = `Loaded: ${loaded} / ${total}`;
+      if (loaded >= total) onComplete();
+    };
+  });
+
+  setTimeout(() => {
+    if (loaded < total) onComplete();
+  }, 3500);
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.mobile-screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function startMobileGame() {
+  mState.queue = [...QUESTIONS].sort(() => Math.random() - 0.5);
+  mState.currentIndex = 0;
+  mState.score = 0;
+  mState.missedList = [];
+  mState.isRetake = false;
+  showScreen('screenGameMobile');
+  renderMobileQuestion();
+}
+
+function renderMobileQuestion() {
+  clearInterval(mState.spotterTimer);
+  const list = mState.isRetake ? mState.retakeQueue : mState.queue;
+  const idx = mState.isRetake ? mState.retakeIndex : mState.currentIndex;
+
+  if (idx >= list.length) {
+    onChallengeFinish();
+    return;
+  }
+
+  const q = list[idx];
+  mState.activeQ = q;
+
+  // HUD
+  const total = list.length;
+  document.getElementById('hudQNo').textContent = `${mState.isRetake ? 'Retake' : 'Q'}: ${idx + 1} / ${total}`;
+  document.getElementById('hudScoreBadge').textContent = `Score: ${mState.score}`;
+  const pct = Math.round((idx / total) * 100);
+  document.getElementById('hudProgressFill').style.width = `${pct}%`;
+
+  const canvas = document.getElementById('mobileCanvas');
+  canvas.innerHTML = '';
+
+  if (q.type === 'word_to_4_pics') {
+    renderWordTo4PicsMobile(q, canvas);
+  } else if (q.type === 'pic_to_4_words') {
+    renderPicTo4WordsMobile(q, canvas);
+  } else if (q.type === 'sentence_rearrange') {
+    renderSentenceRearrangeMobile(q, canvas);
+  } else if (q.type === 'nine_panel_spotter') {
+    renderNinePanelSpotterMobile(q, canvas);
+  }
+}
+
+/* 1. WORD TO 4 PICS (70%+ Screen Grid) */
+function renderWordTo4PicsMobile(q, canvas) {
+  document.getElementById('hudModeTag').textContent = 'PICTURE MATCH';
+  speakShortUK(q.target);
+
+  const strip = document.createElement('div');
+  strip.className = 'prompt-strip-mobile';
+
+  const label = document.createElement('div');
+  label.className = 'prompt-text-mobile';
+  label.textContent = q.target;
+
+  const audioBtn = document.createElement('button');
+  audioBtn.className = 'tts-btn-mobile';
+  audioBtn.textContent = '🔊';
+  audioBtn.onclick = () => speakShortUK(q.target);
+
+  strip.appendChild(label);
+  strip.appendChild(audioBtn);
+
+  const grid = document.createElement('div');
+  grid.className = 'grid-4-pics-phone';
+
+  const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
+  shuffled.forEach(choice => {
+    const card = document.createElement('button');
+    card.className = 'card-pic-phone';
+    const img = document.createElement('img');
+    img.src = ASSETS_MAP[choice] || '';
+    img.alt = choice;
+    card.appendChild(img);
+    card.onclick = () => verifyChoiceMobile(card, choice, q.target);
+    grid.appendChild(card);
+  });
+
+  canvas.appendChild(strip);
+  canvas.appendChild(grid);
+}
+
+/* 2. PIC TO 4 WORDS (Hero photo + Thumb buttons) */
+function renderPicTo4WordsMobile(q, canvas) {
+  document.getElementById('hudModeTag').textContent = 'WORD DETECTIVE';
+  speakShortUK(q.target);
+
+  const strip = document.createElement('div');
+  strip.className = 'prompt-strip-mobile';
+  const audioBtn = document.createElement('button');
+  audioBtn.className = 'tts-btn-mobile';
+  audioBtn.textContent = '🔊';
+  audioBtn.onclick = () => speakShortUK(q.target);
+  const textLabel = document.createElement('div');
+  textLabel.className = 'prompt-text-mobile';
+  textLabel.style.fontSize = '1.6rem';
+  textLabel.textContent = "What is this?";
+  strip.appendChild(textLabel);
+  strip.appendChild(audioBtn);
+
+  const hero = document.createElement('div');
+  hero.className = 'hero-photo-phone';
+  const img = document.createElement('img');
+  img.src = ASSETS_MAP[q.imageKey] || '';
+  hero.appendChild(img);
+
+  const grid = document.createElement('div');
+  grid.className = 'grid-4-words-phone';
+
+  const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
+  shuffled.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.className = 'card-word-phone';
+    btn.textContent = choice;
+    btn.onclick = () => verifyChoiceMobile(btn, choice, q.target);
+    grid.appendChild(btn);
+  });
+
+  canvas.appendChild(strip);
+  canvas.appendChild(hero);
+  canvas.appendChild(grid);
+}
+
+function verifyChoiceMobile(el, chosen, target) {
+  const all = document.querySelectorAll('.card-pic-phone, .card-word-phone');
+  all.forEach(c => c.style.pointerEvents = 'none');
+
+  if (chosen.toLowerCase() === target.toLowerCase()) {
+    el.classList.add('correct');
+    PhoneAudio.ding();
+    mState.score += 10;
+    if (mState.isRetake) mState.retakeCorrectCount++;
+    setTimeout(stepMobileNext, 550);
+  } else {
+    el.classList.add('wrong');
+    PhoneAudio.buzz();
+    if (!mState.isRetake) {
+      if (!mState.missedList.some(m => m.id === mState.activeQ.id)) {
+        mState.missedList.push(mState.activeQ);
+      }
+    }
+    setTimeout(stepMobileNext, 950);
+  }
+}
+
+/* 3. SENTENCE BUILDER MOBILE */
+function renderSentenceRearrangeMobile(q, canvas) {
+  document.getElementById('hudModeTag').textContent = 'SENTENCE BUILDER';
+  mState.placedTokens = [];
+
+  const strip = document.createElement('div');
+  strip.className = 'prompt-strip-mobile';
+  const label = document.createElement('div');
+  label.className = 'prompt-text-mobile';
+  label.style.fontSize = '1.5rem';
+  label.textContent = "Tap to build the sentence:";
+  strip.appendChild(label);
+
+  const dropZone = document.createElement('div');
+  dropZone.className = 'sentence-drop-phone';
+
+  const bankZone = document.createElement('div');
+  bankZone.className = 'sentence-bank-phone';
+
+  const shuffled = [...q.blocks].sort(() => Math.random() - 0.5);
+  shuffled.forEach((wText, i) => {
+    const token = document.createElement('button');
+    token.className = 'token-phone';
+    token.textContent = wText;
+
+    token.onclick = () => {
+      if (!token.classList.contains('placed')) {
+        token.classList.add('placed');
+        mState.placedTokens.push({ text: wText, origin: token });
+
+        const placed = document.createElement('button');
+        placed.className = 'token-phone';
+        placed.style.background = 'var(--neon-lime)';
+        placed.style.color = '#FFF';
+        placed.textContent = wText;
+
+        placed.onclick = () => {
+          token.classList.remove('placed');
+          mState.placedTokens = mState.placedTokens.filter(t => t.origin !== token);
+          dropZone.removeChild(placed);
+        };
+        dropZone.appendChild(placed);
+
+        if (mState.placedTokens.length === q.blocks.length) {
+          const res = mState.placedTokens.map(t => t.text).join(' ');
+          if (res === q.target) {
+            PhoneAudio.ding();
+            dropZone.style.borderColor = 'var(--neon-lime)';
+            mState.score += 15;
+            if (mState.isRetake) mState.retakeCorrectCount++;
+            setTimeout(stepMobileNext, 600);
+          } else {
+            PhoneAudio.buzz();
+            dropZone.style.borderColor = 'var(--neon-pink)';
+            if (!mState.isRetake) {
+              if (!mState.missedList.some(m => m.id === mState.activeQ.id)) {
+                mState.missedList.push(mState.activeQ);
+              }
+            }
+            setTimeout(stepMobileNext, 1000);
+          }
+        }
+      }
+    };
+    bankZone.appendChild(token);
+  });
+
+  canvas.appendChild(strip);
+  canvas.appendChild(dropZone);
+  canvas.appendChild(bankZone);
+}
+
+/* 4. 9-PANEL SPOTTING PHONE */
+function renderNinePanelSpotterMobile(q, canvas) {
+  document.getElementById('hudModeTag').textContent = 'SPELLING SPOTTER';
+  mState.spotterRound = 0;
+  speakShortUK(q.word);
+  renderSubSpotterMobile(q, canvas);
+}
+
+function renderSubSpotterMobile(q, canvas) {
+  clearInterval(mState.spotterTimer);
+  canvas.innerHTML = '';
+
+  const roundObj = q.rounds[mState.spotterRound];
+  const roundNo = mState.spotterRound + 1;
+
+  const strip = document.createElement('div');
+  strip.className = 'prompt-strip-mobile';
+  const label = document.createElement('div');
+  label.className = 'prompt-text-mobile';
+  label.style.fontSize = '1.35rem';
+  label.innerHTML = `Spot Correct! <span style="color:var(--neon-yellow); font-size:1.4rem;">(${roundNo}/4)</span>`;
+  strip.appendChild(label);
+
+  const timerBar = document.createElement('div');
+  timerBar.className = 'spotter-timer-phone';
+  const timerStream = document.createElement('div');
+  timerStream.className = 'spotter-timer-stream';
+  timerBar.appendChild(timerStream);
+
+  const grid = document.createElement('div');
+  grid.className = 'grid-9-phone';
+
+  const shuffledPanels = [...roundObj.panels].sort(() => Math.random() - 0.5);
+  shuffledPanels.forEach(pText => {
+    const tile = document.createElement('button');
+    tile.className = 'spotter-tile-phone';
+    tile.textContent = pText;
+
+    tile.onclick = () => {
+      clearInterval(mState.spotterTimer);
+      if (pText === roundObj.correct) {
+        tile.classList.add('correct');
+        PhoneAudio.ding();
+
+        if (mState.spotterRound < 3) {
+          mState.spotterRound++;
+          setTimeout(() => renderSubSpotterMobile(q, canvas), 400);
+        } else {
+          mState.score += 20;
+          if (mState.isRetake) mState.retakeCorrectCount++;
+          setTimeout(stepMobileNext, 550);
+        }
+      } else {
+        tile.classList.add('wrong');
+        PhoneAudio.buzz();
+        if (!mState.isRetake) {
+          if (!mState.missedList.some(m => m.id === mState.activeQ.id)) {
+            mState.missedList.push(mState.activeQ);
+          }
+        }
+        setTimeout(stepMobileNext, 950);
+      }
+    };
+    grid.appendChild(tile);
+  });
+
+  canvas.appendChild(strip);
+  canvas.appendChild(timerBar);
+  canvas.appendChild(grid);
+
+  let rem = 10000;
+  mState.spotterTimer = setInterval(() => {
+    rem -= 100;
+    const p = Math.max(0, (rem / 10000) * 100);
+    timerStream.style.width = `${p}%`;
+    if (rem <= 0) {
+      clearInterval(mState.spotterTimer);
+      PhoneAudio.buzz();
+      if (!mState.isRetake) {
+        if (!mState.missedList.some(m => m.id === mState.activeQ.id)) {
+          mState.missedList.push(mState.activeQ);
+        }
+      }
+      stepMobileNext();
+    }
+  }, 100);
+}
+
+function stepMobileNext() {
+  if (mState.isRetake) {
+    mState.retakeIndex++;
+  } else {
+    mState.currentIndex++;
+  }
+  renderMobileQuestion();
+}
+
+/* =========================================================================
+   6. RETAKE MASTERY LOGIC
+   ========================================================================= */
+function onChallengeFinish() {
+  document.getElementById('hudProgressFill').style.width = '100%';
+
+  if (!mState.isRetake) {
+    if (mState.missedList.length === 0) {
+      openRosterPhone();
+    } else {
+      document.getElementById('retakeDesc').textContent = 
+        `Progress hit 100%! You missed ${mState.missedList.length} questions. You must ace at least 60% on retake to get your certificate!`;
+      showScreen('screenRetakeMobile');
+    }
+  } else {
+    const total = mState.retakeQueue.length;
+    const pass = mState.retakeCorrectCount / total;
+
+    if (pass >= 0.6) {
+      openRosterPhone();
+    } else {
+      alert(`You scored ${Math.round(pass * 100)}% on retakes. SJKC NAN HWA requires at least 60% mastery. Let's practice again!`);
+      runRetakes();
+    }
+  }
+}
+
+function runRetakes() {
+  mState.isRetake = true;
+  mState.retakeQueue = [...mState.missedList].sort(() => Math.random() - 0.5);
+  mState.retakeIndex = 0;
+  mState.retakeCorrectCount = 0;
+  showScreen('screenGameMobile');
+  renderMobileQuestion();
+}
+
+function openRosterPhone() {
+  renderRosterList();
+  showScreen('screenRosterMobile');
+}
+
+/* =========================================================================
+   7. SJKC NAN HWA ROSTER & CERTIFICATE
+   ========================================================================= */
+function renderRosterList() {
+  const container = document.getElementById('rosterListPhone');
+  container.innerHTML = '';
+
+  ROSTER_21.forEach((fullName, idx) => {
+    const card = document.createElement('div');
+    card.className = 'student-card-phone';
+    card.onclick = () => openCertificate(idx + 1, fullName);
+
+    const badge = document.createElement('div');
+    badge.className = 'cand-badge-phone';
+    badge.textContent = idx + 1;
+
+    const name = document.createElement('div');
+    name.className = 'cand-name-phone';
+    name.textContent = fullName;
+
+    card.appendChild(badge);
+    card.appendChild(name);
+    container.appendChild(card);
+  });
+}
+
+function openCertificate(candNo, candName) {
+  document.getElementById('certStudentName').textContent = candName;
+  document.getElementById('certCandNo').textContent = candNo < 10 ? `0${candNo}` : candNo;
+  const d = new Date();
+  document.getElementById('certDateVal').textContent = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  document.getElementById('certModalMobile').classList.add('active');
+}
+
+function closeCert() {
+  document.getElementById('certModalMobile').classList.remove('active');
+}
+
+async function downloadPdf() {
+  const sheet = document.getElementById('certSheetPhone');
+  const name = document.getElementById('certStudentName').textContent;
+
+  try {
+    const canvas = await html2canvas(sheet, {
+      scale: 2.8,
+      useCORS: true,
+      backgroundColor: '#FFFEFA'
+    });
+
+    const img = canvas.toDataURL('image/png');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    const w = pdf.internal.pageSize.getWidth();
+    const h = pdf.internal.pageSize.getHeight();
+    pdf.addImage(img, 'PNG', 10, 10, w - 20, h - 20);
+    pdf.save(`SJKC_NAN_HWA_Year4_${name.replace(/\s+/g, '_')}.pdf`);
+  } catch(e) {
+    window.print();
+  }
+}
+
+/* =========================================================================
+   8. TEACHER BYPASS QUICK TEST (Passcode: idme5374@ONG)
+   ========================================================================= */
+function openPassPrompt() {
+  document.getElementById('passModalMobile').style.display = 'flex';
+  const inp = document.getElementById('inputPasscode');
+  inp.value = '';
+  inp.focus();
+}
+
+function closePassPrompt() {
+  document.getElementById('passModalMobile').style.display = 'none';
+}
+
+function verifyPass() {
+  const entered = document.getElementById('inputPasscode').value.trim();
+  if (entered === 'idme5374@ONG') {
+    closePassPrompt();
+    mState.score = 450;
+    openRosterPhone();
+  } else {
+    alert('Incorrect teacher passcode.');
+  }
+}
+
+// Initial Boot: Preload image assets
+window.addEventListener('DOMContentLoaded', () => {
+  preloadMobileVisuals();
+});
+</script>
+</body>
+</html>
